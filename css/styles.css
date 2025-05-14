@@ -1,0 +1,517 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+.results-section {
+    scroll-margin-top: 20px;
+}
+
+/* Container and Layout */
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.page-title {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #2980b9;
+    margin: 0 0 30px 0;
+    font-size: 2.2em;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #eee;
+}
+
+/* Selection Columns */
+.selection-column {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.selection-column:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.column-title {
+    color: #2980b9;
+    text-align: center;
+    margin: 0 0 25px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #2980b9;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+/* Buttons */
+.time-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.time-buttons .btn {
+    padding: 20px 24px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.duration-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+}
+
+.topic-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px 24px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.topic-btn {
+    padding: 25px 15px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    text-align: center;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topic-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Heart Button */
+.heart-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s;
+    font-size: 1.2em;
+    opacity: 0.7;
+}
+
+.heart-btn:not(.active) {
+    color: #999;
+}
+
+.heart-btn.active {
+    color: #e74c3c;
+    opacity: 1;
+}
+
+.heart-btn:hover {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+/* Colors */
+.color-1 { background-color: #2980b9; }
+.color-2 { background-color: #27ae60; }
+.color-3 { background-color: #8e44ad; }
+.color-4 { background-color: #f39c12; }
+.color-5 { background-color: #c0392b; }
+
+/* Results Section */
+.results-section {
+    grid-column: 1 / -1;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+/* Favorites Section */
+.favorites-section {
+    grid-column: 1 / -1;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+.favorites-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2980b9;
+}
+
+.favorites-title h2 {
+    color: #2980b9;
+    margin: 0;
+}
+
+.favorites-count {
+    background-color: #2980b9;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.favorite-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s ease;
+}
+
+.favorite-item:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 1.5em;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.no-favorites {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* Results display */
+.result-title {
+    font-size: 1.3em;
+    color: #2980b9;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2980b9;
+}
+
+.selected-song {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s ease;
+}
+
+.selected-song:hover {
+    background-color: #f9f9f9;
+}
+
+.song-number {
+    font-weight: bold;
+    color: #2980b9;
+    margin-right: 5px;
+}
+
+#total-time {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #2980b9;
+    text-align: right;
+}
+
+/* Random Selection */
+.selection-list {
+    margin-top: 15px;
+}
+
+.selection-list a {
+    color: #2980b9;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.selection-list a:hover {
+    text-decoration: underline;
+}
+
+/* Full Song List */
+.full-song-list {
+    max-height: 350px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.song-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.song-item:hover {
+    background-color: #f9f9f9;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+    
+    .topic-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .page-title {
+        font-size: 1.5em;
+    }
+    
+    .column-title {
+        font-size: 1.2em;
+    }
+    
+    .btn, .topic-btn {
+        font-size: 14px;
+        padding: 12px 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    .container {
+        box-shadow: none;
+        padding: 10px;
+    }
+
+    .selection-column, 
+    .favorites-section,
+    .btn, 
+    .topic-btn, 
+    .heart-btn, 
+    .remove-btn {
+        display: none;
+    }
+
+    .results-section {
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .selected-song {
+        page-break-inside: avoid;
+    }
+}
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #2980b9;
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.scroll-to-top:hover {
+    background-color: #3498db;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    /* Base dark theme colors */
+    :root {
+        --dark-bg: #1a1a1a;
+        --dark-surface: #2d2d2d;
+        --dark-surface-alt: #3a3a3a;
+        --dark-text: #e0e0e0;
+        --dark-text-secondary: #b0b0b0;
+        --dark-border: #444;
+        --dark-primary: #3498db;
+        --dark-primary-dark: #2980b9;
+        --dark-accent: #e74c3c;
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+    }
+
+    .container, 
+    .results-section, 
+    .favorites-section {
+        background-color: var(--dark-surface);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .selection-column {
+        background-color: var(--dark-surface-alt);
+        border-color: var(--dark-border);
+    }
+
+    .page-title, 
+    .column-title, 
+    .result-title, 
+    .favorites-title h2, 
+    .song-number, 
+    #total-time {
+        color: var(--dark-primary);
+    }
+
+    .page-title {
+        border-bottom-color: var(--dark-border);
+    }
+
+    .page-title::after {
+        content: '';
+        display: block;
+        height: 2px;
+        background: linear-gradient(to right, var(--dark-primary), transparent);
+    }
+
+    .column-title, 
+    .result-title, 
+    .favorites-title {
+        border-bottom-color: var(--dark-primary-dark);
+    }
+
+    a {
+        color: var(--dark-primary);
+    }
+
+    .selected-song, 
+    .favorite-item, 
+    .song-item {
+        border-bottom-color: var(--dark-border);
+    }
+
+    .selected-song:hover, 
+    .song-item:hover {
+        background-color: var(--dark-surface-alt);
+    }
+
+    .heart-btn.active {
+        color: var(--dark-accent);
+    }
+
+    .heart-btn:not(.active) {
+        color: var(--dark-text-secondary);
+    }
+
+    .favorites-count {
+        background-color: var(--dark-primary-dark);
+    }
+
+    .remove-btn {
+        color: var(--dark-accent);
+    }
+
+    .full-song-list {
+        border-color: var(--dark-border);
+    }
+
+    .no-favorites {
+        color: var(--dark-text-secondary);
+    }
+
+    /* Keep button colors vibrant */
+    .color-1 { background-color: #3498db; }
+    .color-2 { background-color: #2ecc71; }
+    .color-3 { background-color: #9b59b6; }
+    .color-4 { background-color: #f1c40f; }
+    .color-5 { background-color: #e74c3c; }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+        background-color: var(--dark-primary-dark);
+    }
+
+    .scroll-to-top:hover {
+        background-color: var(--dark-primary);
+    }
+}

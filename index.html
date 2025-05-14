@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Bài Ca Mới</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">Ace đăng nhập <a href="https://book.watv.org/" target="_blank">book</a>, sau đó bấm vào nút để chọn BCM nhé</h1>
+        
+        <!-- Random Selection Column -->
+        <div class="selection-column">
+            <h2 class="column-title">Chọn 3-4 bài</h2>
+            <div class="time-buttons">
+                <button onclick="generateRandomSelection(480, 494)" class="btn color-1">Chọn (8:00-8:14)</button>
+                <button onclick="generateRandomSelection(495, 510)" class="btn color-2">Chọn (8:15-8:30)</button>
+                <button onclick="generateRandomSelection(511, 525)" class="btn color-3">Chọn (8:31-8:45)</button>
+                <button onclick="generateRandomSelection(526, 540)" class="btn color-4">Chọn (8:46-9:00)</button>
+            </div>
+        </div>
+        
+        <!-- Duration Selection Column -->
+        <div class="selection-column">
+            <h2 class="column-title">Chọn theo thời gian</h2>
+            <div class="duration-buttons">
+                <button onclick="generateShortSongs()" class="btn color-2">Bài ngắn (0:01-1:45)</button>
+                <button onclick="generateTwoMinuteSongs()" class="btn color-3">Bài 2 phút (1:45-2:14)</button>
+                <button onclick="generateTimeRangeSongs(135, 165)" class="btn color-4">Bài 2.5p (2:15-2:45)</button>
+                <button onclick="generateTimeRangeSongs(165, 210)" class="btn color-5">Bài 3 phút (2:45-3:30)</button>
+                <button onclick="generateTimeRangeSongs(210, 330)" class="btn color-1">Bài 4 phút+ (3:30+)</button>
+            </div>
+        </div>
+        
+        <!-- Topic Selection Column -->
+        <div class="selection-column">
+            <h2 class="column-title">Chọn theo chủ đề</h2>
+            <div class="topic-buttons">
+                <button onclick="generateTopicSongs('Vinh hiển')" class="topic-btn" style="background-color: #3498db;">Vinh hiển</button>
+                <button onclick="generateTopicSongs('Cảm tạ')" class="topic-btn" style="background-color: #2ecc71;">Cảm tạ</button>
+                <button onclick="generateTopicSongs('Đức tin')" class="topic-btn" style="background-color: #9b59b6;">Đức tin</button>
+                <button onclick="generateTopicSongs('Sự trông cậy')" class="topic-btn" style="background-color: #f1c40f;">Sự trông cậy</button>
+                <button onclick="generateTopicSongs('Tình yêu thương')" class="topic-btn" style="background-color: #e74c3c;">Tình yêu thương</button>
+                <button onclick="generateTopicSongs('Hội lớn')" class="topic-btn" style="background-color: #1abc9c;">Hội lớn</button>
+                <button onclick="generateTopicSongs('Truyền đạo')" class="topic-btn" style="background-color: #34495e;">Truyền đạo</button>
+                <button onclick="generateTopicSongs('Ngày nghỉ')" class="topic-btn" style="background-color: #e67e22;">Ngày nghỉ</button>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="results-section" class="results-section" style="display: none;">
+            <div id="results-list"></div>
+            <div id="total-time"></div>
+            <button id="show-full-list-btn" class="btn color-1" style="margin-top: 20px;">Xem danh sách đầy đủ</button>
+            <div id="full-song-list-container" style="display: none;">
+                <div class="full-song-list" id="full-song-list"></div>
+            </div>
+        </div>
+        
+        <!-- Favorites Section -->
+        <div class="favorites-section">
+            <div class="favorites-title">
+                <h2>Bài Ca Mới yêu thích</h2>
+                <div class="favorites-count">0</div>
+            </div>
+            <div id="favorites-list"></div>
+        </div>
+    </div>
+    
+    <!-- Scroll to top -->
+    <div id="scroll-to-top" class="scroll-to-top" title="Lên đầu trang">↑</div>
+    
+    <!-- Include JavaScript -->
+    <script src="js/songs.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

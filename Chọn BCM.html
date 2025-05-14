@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Bài Ca Mới</title>
+<style>
+    /* Base Styles */
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        min-height: 100vh;
+    }
+
+    /* Smooth Scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .results-section {
+        scroll-margin-top: 20px;
+    }
+
+    /* Container and Layout */
+    .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .page-title {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: #2980b9;
+        margin: 0 0 30px 0;
+        font-size: 2.2em;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #eee;
+    }
+
+    /* Selection Columns */
+    .selection-column {
+        background-color: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .selection-column:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .column-title {
+        color: #2980b9;
+        text-align: center;
+        margin: 0 0 25px 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #2980b9;
+        font-size: 1.4em;
+        font-weight: 600;
+    }
+
+    /* Buttons */
+    .time-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .time-buttons .btn {
+        padding: 20px 24px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .duration-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 0;
+    }
+
+    .topic-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px 24px;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        margin: 5px 0;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .topic-btn {
+        padding: 25px 15px;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        text-align: center;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .topic-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Heart Button */
+    .heart-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s;
+        font-size: 1.2em;
+        opacity: 0.7;
+    }
+
+    .heart-btn:not(.active) {
+        color: #999;
+    }
+
+    .heart-btn.active {
+        color: #e74c3c;
+        opacity: 1;
+    }
+
+    .heart-btn:hover {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    /* Colors */
+    .color-1 { background-color: #2980b9; }
+    .color-2 { background-color: #27ae60; }
+    .color-3 { background-color: #8e44ad; }
+    .color-4 { background-color: #f39c12; }
+    .color-5 { background-color: #c0392b; }
+
+    /* Results Section */
+    .results-section {
+        grid-column: 1 / -1;
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
+    }
+
+    /* Favorites Section */
+    .favorites-section {
+        grid-column: 1 / -1;
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
+    }
+
+    .favorites-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #2980b9;
+    }
+
+    .favorites-title h2 {
+        color: #2980b9;
+        margin: 0;
+        font-size: 1.4em;
+    }
+
+    .favorites-count {
+        background-color: #e74c3c;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.9em;
+    }
+
+    .favorites-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+    }
+
+    .favorite-item {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .favorite-item:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .favorite-item .remove-btn {
+        color: #e74c3c;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px 10px;
+        font-size: 1.2em;
+        transition: all 0.2s ease;
+        margin-left: 10px;
+    }
+
+    .favorite-item .remove-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .no-favorites {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+    }
+
+    #total-time {
+        font-size: 1.3em;
+        margin: 0 0 20px 0;
+        padding: 15px;
+        background-color: #2980b9;
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(41, 128, 185, 0.2);
+    }
+
+    .result {
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+
+    /* Song Items */
+    .selected-song {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        margin: 10px 0;
+        background-color: white;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .selected-song:hover {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .song-number {
+        color: #666;
+        margin-right: 15px;
+        font-weight: bold;
+        min-width: 40px;
+    }
+
+    .selected-song a {
+        color: #2980b9;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .selected-song a:hover {
+        text-decoration: underline;
+    }
+
+    .song-topic {
+        padding: 8px 16px;
+        border-radius: 6px;
+        background-color: #f0f0f0;
+        color: #666;
+        font-size: 0.9em;
+        white-space: nowrap;
+        min-width: 100px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    /* Song List */
+    .song-list-container {
+        margin-top: 40px;
+        padding: 30px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .song-list-header {
+        display: grid;
+        grid-template-columns: 80px minmax(400px, 1fr) 120px 200px;
+        padding: 16px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .song-item {
+        display: grid;
+        grid-template-columns: 80px minmax(400px, 1fr) 120px 200px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #eee;
+        gap: 20px;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .song-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .warning {
+        background-color: #fff3e0;
+        color: #f39c12;
+        padding: 16px;
+        border-radius: 8px;
+        animation: fadeIn 0.5s ease;
+        font-weight: 500;
+    }
+
+    .result-title {
+        font-size: 1.3em;
+        font-weight: 600;
+        margin: 0 0 20px 0;
+        padding: 15px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 1200px) {
+        body {
+            padding: 10px;
+        }
+
+        .container {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .selection-column {
+            padding: 15px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .page-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .column-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .topic-buttons {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .topic-btn {
+            padding: 15px 10px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+
+        .time-buttons .btn {
+            padding: 15px 20px;
+        }
+
+        .favorites-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .song-list-header, .song-item {
+            grid-template-columns: 60px minmax(200px, 1fr) 80px 120px;
+            gap: 10px;
+            padding: 12px;
+            font-size: 14px;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .page-title {
+            font-size: 1.5em;
+        }
+
+        .topic-buttons {
+            grid-template-columns: 1fr;
+        }
+
+        .topic-btn {
+            padding: 12px 8px;
+        }
+
+        .selected-song {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .selected-song .song-topic {
+            align-self: flex-start;
+        }
+
+        .song-list-container {
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .song-list-header {
+            display: none;
+        }
+
+        .song-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+            padding: 15px;
+        }
+
+        .song-item .song-id {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-weight: bold;
+        }
+
+        .song-item .song-title {
+            margin-right: 30px;
+        }
+
+        .song-item .song-duration,
+        .song-item .song-topic {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .favorite-item {
+            padding: 12px;
+        }
+
+        .favorite-item .favorite-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .favorite-item a {
+            display: block;
+            margin-right: 30px;
+            word-break: break-word;
+        }
+
+        .heart-btn, 
+        .remove-btn {
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-section {
+            padding: 15px;
+        }
+
+        #total-time {
+            font-size: 1.1em;
+            padding: 12px;
+        }
+
+        .result-title {
+            font-size: 1.1em;
+            padding: 12px;
+        }
+
+        .warning {
+            padding: 12px;
+            font-size: 0.9em;
+        }
+
+        /* Enhanced mobile layout for favorite items */
+        .favorite-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .favorite-item .favorite-actions {
+            align-self: flex-end;
+            margin-top: -30px; /* Overlap with the content for space efficiency */
+        }
+
+        /* Improve spacing for song details on mobile */
+        .song-item {
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .song-item .song-title {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            padding-right: 35px; /* Space for song ID */
+        }
+    }
+
+    /* Very small screens */
+    @media screen and (max-width: 320px) {
+        .container {
+            padding: 10px;
+        }
+
+        .btn, 
+        .topic-btn {
+            font-size: 13px;
+            padding: 10px;
+        }
+
+        .favorites-title h2 {
+            font-size: 1.2em;
+        }
+
+        .favorites-count {
+            padding: 3px 6px;
+            font-size: 0.8em;
+        }
+
+        .selected-song {
+            padding: 12px;
+        }
+
+        .song-topic {
+            font-size: 0.8em;
+            padding: 6px 12px;
+        }
+    }
+
+    /* Touch device optimizations */
+    @media (hover: none) and (pointer: coarse) {
+        /* Improve touch targets */
+        .btn,
+        .topic-btn,
+        .heart-btn,
+        .remove-btn,
+        .selected-song a {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Add more space between interactive elements */
+        .duration-buttons,
+        .time-buttons {
+            gap: 15px;
+        }
+
+        /* Improve tap targets for links */
+        a {
+            padding: 5px 0;
+        }
+
+        /* Remove hover effects that might cause issues on touch devices */
+        .selection-column:hover,
+        .btn:hover,
+        .topic-btn:hover,
+        .selected-song:hover,
+        .favorite-item:hover {
+            transform: none;
+        }
+
+        /* Add active state feedback instead */
+        .btn:active,
+        .topic-btn:active,
+        .heart-btn:active,
+        .remove-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* Enhanced touch feedback */
+        .selected-song:active,
+        .favorite-item:active {
+            background-color: #f8f9fa;
+        }
+
+        /* Improve scrolling experience */
+        .song-list-container {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
+        }
+    }
+
+    /* Print styles for better resource usage */
+    @media print {
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            box-shadow: none;
+        }
+
+        .btn,
+        .topic-btn,
+        .heart-btn,
+        .remove-btn {
+            display: none;
+        }
+
+        .song-list-container {
+            break-inside: avoid;
+        }
+
+        .selected-song,
+        .favorite-item {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        .btn,
+        .topic-btn {
+            border: 2px solid #000;
+        }
+
+        .heart-btn.active {
+            color: #000;
+        }
+
+        .warning {
+            border: 2px solid #f39c12;
+        }
+    }
+
+    /* Reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        html {
+            scroll-behavior: auto !important;
+        }
+    }
+
+    /* Dark mode support - optional */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #1a1a1a;
+        }
+
+        .container,
+        .selection-column,
+        .results-section,
+        .favorites-section,
+        .song-list-container {
+            background-color: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .selected-song,
+        .favorite-item,
+        .song-item {
+            background-color: #363636;
+            border-color: #404040;
+        }
+
+        .page-title,
+        .column-title,
+        .favorites-title h2,
+        .selected-song a {
+            color: #fff;
+        }
+
+        .song-topic,
+        .song-number,
+        .song-duration {
+            background-color: #404040;
+            color: #fff;
+        }
+
+        .heart-btn:not(.active) {
+            color: #666;
+        }
+
+        .warning {
+            background-color: #462c03;
+            color: #f39c12;
+        }
+    }
+	/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    /* Base dark theme colors */
+    :root {
+        --dark-bg: #1a1a1a;
+        --dark-surface: #2d2d2d;
+        --dark-surface-hover: #363636;
+        --dark-border: #404040;
+        --dark-text: #e0e0e0;
+        --dark-text-secondary: #a0a0a0;
+        --dark-primary: #3498db;
+        --dark-primary-hover: #2980b9;
+        --dark-shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+    }
+
+    /* Container and sections */
+    .container,
+    .selection-column,
+    .results-section,
+    .favorites-section,
+    .song-list-container {
+        background-color: var(--dark-surface);
+        border-color: var(--dark-border);
+        box-shadow: 0 4px 6px var(--dark-shadow);
+    }
+
+    .selection-column:hover {
+        background-color: var(--dark-surface-hover);
+        box-shadow: 0 6px 12px var(--dark-shadow);
+    }
+
+    /* Headers and titles */
+    .page-title {
+        color: var(--dark-primary);
+        border-bottom-color: var(--dark-border);
+    }
+
+    .column-title {
+        color: var(--dark-primary);
+        border-bottom-color: var(--dark-primary);
+    }
+
+    /* Buttons and interactive elements */
+    .btn {
+        box-shadow: 0 2px 4px var(--dark-shadow);
+    }
+
+    .btn:hover {
+        box-shadow: 0 4px 8px var(--dark-shadow);
+        filter: brightness(1.1);
+    }
+
+    /* Color modifications for better contrast */
+    .color-1 { background-color: #3498db; }
+    .color-2 { background-color: #2ecc71; }
+    .color-3 { background-color: #9b59b6; }
+    .color-4 { background-color: #f1c40f; }
+    .color-5 { background-color: #e74c3c; }
+
+    /* Songs and favorites */
+    .selected-song,
+    .favorite-item,
+    .song-item {
+        background-color: var(--dark-surface);
+        border: 1px solid var(--dark-border);
+        box-shadow: 0 2px 4px var(--dark-shadow);
+    }
+
+    .selected-song:hover,
+    .favorite-item:hover,
+    .song-item:hover {
+        background-color: var(--dark-surface-hover);
+        box-shadow: 0 4px 8px var(--dark-shadow);
+    }
+
+    .selected-song a,
+    .favorite-item a,
+    .song-item a {
+        color: var(--dark-primary);
+    }
+
+    .selected-song a:hover,
+    .favorite-item a:hover,
+    .song-item a:hover {
+        color: var(--dark-primary-hover);
+    }
+
+    /* Song topics and labels */
+    .song-topic {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--dark-text);
+        border: 1px solid var(--dark-border);
+    }
+
+    .song-number {
+        color: var(--dark-text-secondary);
+    }
+
+    /* Heart button */
+    .heart-btn:not(.active) {
+        color: var(--dark-text-secondary);
+        opacity: 0.5;
+    }
+
+    .heart-btn.active {
+        color: #e74c3c;
+        opacity: 1;
+    }
+
+    .heart-btn:hover {
+        opacity: 1;
+    }
+
+    /* Total time display */
+    #total-time {
+        background-color: var(--dark-primary);
+        color: white;
+        box-shadow: 0 2px 4px var(--dark-shadow);
+    }
+
+    /* Results section */
+    .result-title {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--dark-text);
+    }
+
+    /* Warning messages */
+    .warning {
+        background-color: rgba(243, 156, 18, 0.2);
+        color: #f39c12;
+        border: 1px solid rgba(243, 156, 18, 0.3);
+    }
+
+    /* Favorites section */
+    .favorites-title {
+        border-bottom-color: var(--dark-primary);
+    }
+
+    .favorites-title h2 {
+        color: var(--dark-primary);
+    }
+
+    .favorites-count {
+        background-color: #e74c3c;
+    }
+
+    .no-favorites {
+        color: var(--dark-text-secondary);
+    }
+
+    /* Song list header */
+    .song-list-header {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--dark-text);
+    }
+
+    /* Remove button */
+    .favorite-item .remove-btn {
+        color: #e74c3c;
+        opacity: 0.8;
+    }
+
+    .favorite-item .remove-btn:hover {
+        opacity: 1;
+    }
+
+    /* Scrollbar customization */
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--dark-surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--dark-border);
+        border-radius: 6px;
+        border: 3px solid var(--dark-surface);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--dark-text-secondary);
+    }
+
+    /* Selection color */
+    ::selection {
+        background-color: var(--dark-primary);
+        color: white;
+    }
+
+    /* Focus states */
+    *:focus {
+        outline: 2px solid var(--dark-primary);
+        outline-offset: 2px;
+    }
+
+    /* Glassmorphism effects */
+    .selection-column,
+    .results-section,
+    .favorites-section {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background-color: rgba(45, 45, 45, 0.8);
+    }
+
+    /* Gradient accents */
+    .page-title::after {
+        content: '';
+        display: block;
+        height: 2px;
+        background: linear-gradient(to right, var(--dark-primary), transparent);
+        margin-top: 20px;
+    }
+
+    /* Enhanced transitions */
+    .selected-song,
+    .favorite-item,
+    .song-item,
+    .btn,
+    .topic-btn {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.3s ease;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background-color: #3498db;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.scroll-to-top:active {
+    transform: translateY(1px);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .scroll-to-top {
+        background-color: var(--dark-primary);
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .scroll-to-top:hover {
+        background-color: var(--dark-primary-hover);
+    }
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-to-top {
+        transition: opacity 0.1s ease;
+    }
+}
+#scrollTopBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: #333;
+    color: white;
+    border: none;
+    outline: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+#scrollTopBtn:hover {
+    background-color: #555;
+}
+
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+    <div class="container">
+		<h1 class="page-title">Ace đăng nhập <a href="https://book.watv.org/" target="_blank">book</a>, sau đó bấm vào nút để chọn BCM nhé</h1>
+        <!-- Random Selection Column -->
+        <div class="selection-column">
+            <h2 class="column-title">Chọn 3-4 bài</h2>
+            <div class="time-buttons">
+                <button class="btn color-1" onclick="generateRandomSelection(480, 494)">
+                    Chọn (8:00-8:14)
+                </button>
+                <button class="btn color-2" onclick="generateRandomSelection(495, 510)">
+                    Chọn (8:15-8:30)
+                </button>
+                <button class="btn color-3" onclick="generateRandomSelection(511, 525)">
+                    Chọn (8:31-8:45)
+                </button>
+                <button class="btn color-4" onclick="generateRandomSelection(526, 540)">
+                    Chọn (8:46-9:00)
+                </button>
+            </div>
+        </div>
+
+        <!-- Duration Selection Column -->
+        <div class="selection-column">
+            <h2 class="column-title">Chọn theo thời gian</h2>
+            <div class="duration-buttons">
+                <button class="btn color-2" onclick="generateShortSongs()">Bài ngắn (dưới 1:45)</button>
+                <button class="btn color-3" onclick="generateTwoMinuteSongs()">Bài 2 phút (1:45-2:14)</button>
+                <button class="btn color-4" onclick="generateMediumSongs()">Bài 2:30 (2:15-2:44)</button>
+                <button class="btn color-5" onclick="generateLongSongs()">Bài 3 phút (2:45-3:30)</button>
+                <button class="btn color-1" onclick="generateVeryLongSongs()">Bài 4 phút (trên 3:30)</button>
+            </div>
+        </div>
+
+        <!-- Topic Selection Column -->
+        <div class="selection-column">
+            <h2 class="column-title">Chọn theo chủ đề</h2>
+            <div id="topic-buttons" class="topic-buttons">
+                <!-- Topic buttons will be generated here -->
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div id="total-time">Tổng Thời Gian: 0:00</div>
+            <div id="result" class="result"></div>
+			<p>(*) Để chọn lại, ace cuộn lên đầu trang và bấm lại vào nút phù hợp nhé</p>
+			<p>(**) Bấm vào 🤍 để lưu Bài Ca Mới yêu thích. Các Bài Ca mới yêu thích sẽ có tỉ lệ xuất hiện nhiều hơn trong các lần chọn sau. Chỉ có tác dụng trên máy tính/ điện thoại đang sử dụng thôi nhé.</p>
+        </div>
+
+        <!-- Favorites Section -->
+        <div class="favorites-section">
+            <div class="favorites-title">
+                <h2>Bài Ca Mới Yêu Thích</h2>
+                <span class="favorites-count">0</span>
+            </div>
+            <div id="favorites-list" class="favorites-grid"></div>
+			
+        </div>
+    </div>
+
+    <div class="song-list-container" id="song-list-section">
+        <h2>Danh Sách Tất Cả Bài Ca Mới</h2>
+		<div style="margin-bottom:20px;">Lưu ý: Danh sách không bao gồm các bài hát lễ trọng thể như Sabat/ 3 kỳ 7 lễ. Ace chủ động chọn nhé.</div>
+        <div class="song-list-header">
+            <div>STT</div>
+            <div>Tên Bài Ca Mới</div>
+            <div>Thời Gian</div>
+            <div>Chủ Đề</div>
+        </div>
+        <div id="full-song-list"></div>
+    </div>
+	<button onclick="scrollToTop()" id="scrollTopBtn" title="Go to top">↑</button>
+<script>
+//Scroll to top
+// Show button when user scrolls down 20px from top
+window.onscroll = function() { toggleScrollButton() };
+
+function toggleScrollButton() {
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollTopBtn.style.display = "block";
+    } else {
+        scrollTopBtn.style.display = "none";
+    }
+}
+
+// Smooth scroll to top
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Song data array
+const songs = [
+    {id: "18", title: "Khi Lên Núi Thật Cao Vót", link: "https://book.watv.org/newsong/newsong18", topic: "Vinh hiển", duration: "03:20", seconds: 200},
+    {id: "19", title: "Hôsana! Hãy Tiếp Đón Đức Chúa Trời!", link: "https://book.watv.org/newsong/newsong19", topic: "Vinh hiển", duration: "02:30", seconds: 150},
+    {id: "20", title: "Hỡi Cả Thế Giới! Các Ngươi Chẳng Hề Im Lặng", link: "https://book.watv.org/newsong/newsong20", topic: "Vinh hiển", duration: "01:58", seconds: 118},
+    {id: "21", title: "Hãy Ngợi Khen!", link: "https://book.watv.org/newsong/newsong21", topic: "Vinh hiển", duration: "03:12", seconds: 192},
+    {id: "22", title: "Nơi Người Dân Được Lựa Chọn Nhóm Lại", link: "https://book.watv.org/newsong/newsong22", topic: "Vinh hiển", duration: "02:01", seconds: 121},
+    {id: "23", title: "Lời Tiên Tri Của Đức Chúa Trời Quyền Năng", link: "https://book.watv.org/newsong/newsong23", topic: "Vinh hiển", duration: "02:07", seconds: 127},
+    {id: "24", title: "Cả Khắp Thế Gian Chẳng Có Sự Sáng", link: "https://book.watv.org/newsong/newsong24", topic: "Vinh hiển", duration: "02:36", seconds: 156},
+    {id: "25", title: "Hỡi Đấng Đã Đến Với Danh Đavít!", link: "https://book.watv.org/newsong/newsong25", topic: "Vinh hiển", duration: "02:13", seconds: 133},
+    {id: "26", title: "Cha Là Sự Sáng Thật", link: "https://book.watv.org/newsong/newsong26", topic: "Vinh hiển", duration: "02:42", seconds: 162},
+    {id: "27", title: "Nước Sự Sống Của Mẹ", link: "https://book.watv.org/newsong/newsong27", topic: "Vinh hiển", duration: "01:54", seconds: 114},
+    {id: "28", title: "Sự Mầu Nhiệm Cuối Cùng", link: "https://book.watv.org/newsong/newsong28", topic: "Vinh hiển", duration: "03:19", seconds: 199},
+    {id: "29", title: "Ồ! Vinh Hiển Của Giêrusalem", link: "https://book.watv.org/newsong/newsong29", topic: "Vinh hiển", duration: "02:44", seconds: 164},
+    {id: "30", title: "Đấng Thật Vĩ Đại Trên Toàn Vũ Trụ", link: "https://book.watv.org/newsong/newsong30", topic: "Vinh hiển", duration: "01:28", seconds: 88},
+    {id: "31", title: "Vua Của Muôn Vua, Chúa Của Muôn Chúa", link: "https://book.watv.org/newsong/newsong31", topic: "Vinh hiển", duration: "01:31", seconds: 91},
+    {id: "32", title: "Giêrusalem Vinh Quang!", link: "https://book.watv.org/newsong/newsong32", topic: "Vinh hiển", duration: "02:05", seconds: 125},
+    {id: "33", title: "Nước Sự Sống Tuôn Trào", link: "https://book.watv.org/newsong/newsong33", topic: "Vinh hiển", duration: "04:05", seconds: 245},
+    {id: "34", title: "Giêrusalem! Giêrusalem!", link: "https://book.watv.org/newsong/newsong34", topic: "Vinh hiển", duration: "02:15", seconds: 135},
+    {id: "35", title: "Danh Mới", link: "https://book.watv.org/newsong/newsong35", topic: "Vinh hiển", duration: "03:49", seconds: 229},
+    {id: "36", title: "Từ Nơi Mặt Trời Mọc", link: "https://book.watv.org/newsong/newsong36", topic: "Vinh hiển", duration: "01:53", seconds: 113},
+    {id: "37", title: "Mầu Nhiệm Vinh Hiển Đã Được Giấu Kín", link: "https://book.watv.org/newsong/newsong37", topic: "Vinh hiển", duration: "01:44", seconds: 104},
+    {id: "38", title: "Đấng An Xang Hồng, Đức Thánh Linh Đức Chúa Trời Cha!", link: "https://book.watv.org/newsong/newsong38", topic: "Vinh hiển", duration: "01:38", seconds: 98},
+    {id: "39", title: "Hỡi Cả Khắp Thế Giới", link: "https://book.watv.org/newsong/newsong39", topic: "Vinh hiển", duration: "02:02", seconds: 122},
+    {id: "40", title: "Đền Thờ Giêrusalem Mới", link: "https://book.watv.org/newsong/newsong40", topic: "Vinh hiển", duration: "02:30", seconds: 150},
+    {id: "41", title: "Đấng An Xang Hồng, Cha Trên Trời", link: "https://book.watv.org/newsong/newsong41", topic: "Vinh hiển", duration: "02:06", seconds: 126},
+    {id: "42", title: "Dòng Nước Rất Nhỏ Tụ Lại", link: "https://book.watv.org/newsong/newsong42", topic: "Vinh hiển", duration: "03:35", seconds: 215},
+    {id: "43", title: "Đấng An Xang Hồng Giăng Cánh Tay Ngài Quyền Năng", link: "https://book.watv.org/newsong/newsong43", topic: "Vinh hiển", duration: "01:47", seconds: 107},
+    {id: "44", title: "Quý Giá Biết Bao Tình Yêu Thương Của Mẹ!", link: "https://book.watv.org/newsong/newsong44", topic: "Vinh hiển", duration: "02:10", seconds: 130},
+    {id: "45", title: "Từ Siôn Tốt Đẹp Toàn Vẹn", link: "https://book.watv.org/newsong/newsong45", topic: "Vinh hiển", duration: "01:57", seconds: 117},
+    {id: "46", title: "Hãy Nhận Lãnh Đức Thánh Linh!", link: "https://book.watv.org/newsong/newsong46", topic: "Vinh hiển", duration: "02:37", seconds: 157},
+    {id: "47", title: "Cho Đến Nơi Cao Trên Cung Trăng", link: "https://book.watv.org/newsong/newsong47", topic: "Vinh hiển", duration: "02:14", seconds: 134},
+    {id: "48", title: "Nguyện Xin Đấng An Xang Hồng Được Tôn Cao Hơn Các Từng Trời", link: "https://book.watv.org/newsong/newsong48", topic: "Vinh hiển", duration: "03:15", seconds: 195},
+    {id: "49", title: "Nước Sự Sống Mẹ Trên Trời Ban Phát", link: "https://book.watv.org/newsong/newsong49", topic: "Vinh hiển", duration: "02:05", seconds: 125},
+    {id: "50", title: "Nhờ Quyền Năng Lớn Lao Của Cha", link: "https://book.watv.org/newsong/newsong50", topic: "Vinh hiển", duration: "02:41", seconds: 161},
+	{id: "51", title: "Xin Hãy Nhận Lấy Vinh Hiển Tán Dương", link: "https://book.watv.org/newsong/newsong51", topic: "Vinh hiển", duration: "02:13", seconds: 133},
+    {id: "52", title: "Vì Phạm Tội Ăn Trái Thiện Ác", link: "https://book.watv.org/newsong/newsong52", topic: "Vinh hiển", duration: "02:35", seconds: 155},
+    {id: "53", title: "Vinh Hiển Và Quyền Năng Nhận Từ Đấng Sáng Tạo Vĩ Đại", link: "https://book.watv.org/newsong/newsong53", topic: "Vinh hiển", duration: "01:56", seconds: 116},
+    {id: "54", title: "Nhìn Xem! Giêrusalem Sáng Láng Rực Rỡ!", link: "https://book.watv.org/newsong/newsong54", topic: "Vinh hiển", duration: "01:56", seconds: 116},
+    {id: "55", title: "Có Nghe Thấy Tiếng Của Người Canh Giữ Hay Không?", link: "https://book.watv.org/newsong/newsong55", topic: "Vinh hiển", duration: "02:03", seconds: 123},
+    {id: "56", title: "Hãy Hát Xướng Bằng Bài Ca Mới", link: "https://book.watv.org/newsong/newsong56", topic: "Vinh hiển", duration: "02:00", seconds: 120},
+    {id: "57", title: "Tình Yêu Thương Đã Bị Ẩn Giấu Trải Qua Các Kiếp", link: "https://book.watv.org/newsong/newsong57", topic: "Vinh hiển", duration: "02:49", seconds: 169},
+    {id: "58", title: "Bằng Môi Miếng Bé Mọn", link: "https://book.watv.org/newsong/newsong58", topic: "Vinh hiển", duration: "02:42", seconds: 162},
+    {id: "59", title: "Đức Chúa Trời Đã Cầm Lấy Tay Hữu Siru", link: "https://book.watv.org/newsong/newsong59", topic: "Vinh hiển", duration: "02:52", seconds: 172},
+    {id: "60", title: "Hỡi Kẻ Hầu Việc Hòm Giao Ước!", link: "https://book.watv.org/newsong/newsong60", topic: "Vinh hiển", duration: "02:34", seconds: 154},
+    {id: "61", title: "Đấng An Xang Hồng, Đấng Chăn Chiên Thật Đã Đến", link: "https://book.watv.org/newsong/newsong61", topic: "Vinh hiển", duration: "01:52", seconds: 112},
+    {id: "62", title: "Sự Lành Phước Đức Chúa Trời Mẹ Ban Cho", link: "https://book.watv.org/newsong/newsong62", topic: "Vinh hiển", duration: "02:35", seconds: 155},
+    {id: "63", title: "Biển Nhân Loại Muôn Nước Khắp Thế Gian Này", link: "https://book.watv.org/newsong/newsong63", topic: "Vinh hiển", duration: "02:01", seconds: 121},
+    {id: "64", title: "Hôsana! Hãy Tán Dương Với Tấm Lòng Vui Mừng!", link: "https://book.watv.org/newsong/newsong64", topic: "Vinh hiển", duration: "02:45", seconds: 165},
+    {id: "65", title: "Đấng Sự Sáng Của Chúng Con", link: "https://book.watv.org/newsong/newsong65", topic: "Vinh hiển", duration: "02:26", seconds: 146},
+    {id: "66", title: "Tôi Yêu Mến Giêrusalem Mẹ", link: "https://book.watv.org/newsong/newsong66", topic: "Cảm tạ", duration: "02:31", seconds: 151},
+    {id: "67", title: "Ngài Đi Tìm Kiếm Con Cái Đã Bị Mất", link: "https://book.watv.org/newsong/newsong67", topic: "Cảm tạ", duration: "02:26", seconds: 146},
+    {id: "68", title: "Cha An Xang Hồng Đấng Yêu Thương", link: "https://book.watv.org/newsong/newsong68", topic: "Cảm tạ", duration: "03:43", seconds: 223},
+    {id: "69", title: "Quê Hương Vĩnh Viễn Chúng Ta Cùng Trở Về", link: "https://book.watv.org/newsong/newsong69", topic: "Cảm tạ", duration: "02:41", seconds: 161},
+    {id: "70", title: "Thưa Đức Chúa Trời Cha, Đức Chúa Trời Mẹ", link: "https://book.watv.org/newsong/newsong70", topic: "Cảm tạ", duration: "01:54", seconds: 114},
+    {id: "71", title: "Nếu Chúng Ta Chỉ Trông Cậy Đời Này", link: "https://book.watv.org/newsong/newsong71", topic: "Cảm tạ", duration: "02:41", seconds: 161},
+    {id: "72", title: "Không Có Lời Nào Diễn Tả Nổi Từ Sâu Trong Lòng Chan Chứa Nỗi Cảm Tạ", link: "https://book.watv.org/newsong/newsong72", topic: "Cảm tạ", duration: "03:35", seconds: 215},
+    {id: "73", title: "Lạy Thưa Cha, Chính Ngài Yêu Thương Chúng Con Biết Bao!", link: "https://book.watv.org/newsong/newsong73", topic: "Cảm tạ", duration: "02:43", seconds: 163},
+    {id: "74", title: "Làm Cho Linh Hồn Tôi Hiểu Biết Đấng Christ", link: "https://book.watv.org/newsong/newsong74", topic: "Cảm tạ", duration: "01:53", seconds: 113},
+    {id: "75", title: "Thánh Thay Dường Nào Danh Mới", link: "https://book.watv.org/newsong/newsong75", topic: "Cảm tạ", duration: "01:49", seconds: 109},
+    {id: "76", title: "Đức Chúa Trời Cha An Xang Hồng Chí Thánh", link: "https://book.watv.org/newsong/newsong76", topic: "Cảm tạ", duration: "02:29", seconds: 149},
+    {id: "77", title: "Bởi Sự Khôn Ngoan Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong77", topic: "Cảm tạ", duration: "02:28", seconds: 148},
+    {id: "78", title: "Ngai Sáng Láng Đầy Vinh Hiển Cao Quý", link: "https://book.watv.org/newsong/newsong78", topic: "Cảm tạ", duration: "02:34", seconds: 154},
+    {id: "79", title: "Duy Chỉ Có Lòng Cảm Tạ", link: "https://book.watv.org/newsong/newsong79", topic: "Cảm tạ", duration: "02:49", seconds: 169},
+    {id: "80", title: "Hãy Cảm Tạ Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong80", topic: "Cảm tạ", duration: "02:55", seconds: 175},
+    {id: "81", title: "Tình Yêu Thương Đức Chúa Trời Thật Vô Hạn Thay!", link: "https://book.watv.org/newsong/newsong81", topic: "Cảm tạ", duration: "02:34", seconds: 154},
+    {id: "82", title: "Hát Cảm Tạ Lên Đức Chúa Trời Mẹ Luôn Trào Dâng Đầy Tràn!", link: "https://book.watv.org/newsong/newsong82", topic: "Cảm tạ", duration: "02:55", seconds: 175},
+    {id: "83", title: "Khi Chúng Tôi Sống Trong Đời Này", link: "https://book.watv.org/newsong/newsong83", topic: "Cảm tạ", duration: "02:41", seconds: 161},
+    {id: "84", title: "Bằng Hết Linh Hồn Của Con", link: "https://book.watv.org/newsong/newsong84", topic: "Cảm tạ", duration: "02:34", seconds: 154},
+    {id: "85", title: "Đức Chúa Trời Là Đấng Chăn Giữ Linh Hồn Tôi", link: "https://book.watv.org/newsong/newsong85", topic: "Cảm tạ", duration: "02:33", seconds: 153},
+    {id: "86", title: "Tội Lỗi Lớn Tày Trời Của Chúng Con", link: "https://book.watv.org/newsong/newsong86", topic: "Cảm tạ", duration: "02:34", seconds: 154},
+    {id: "87", title: "Danh Chí Thánh Mẹ Tôn Quý", link: "https://book.watv.org/newsong/newsong87", topic: "Cảm tạ", duration: "02:31", seconds: 151},
+    {id: "88", title: "Có Đồng Hành Nào Hạnh Phúc Hơn Đồng Hành Này Chăng?", link: "https://book.watv.org/newsong/newsong88", topic: "Cảm tạ", duration: "03:18", seconds: 198},
+    {id: "89", title: "Hôm Nay Giờ Này Đây", link: "https://book.watv.org/newsong/newsong89", topic: "Cảm tạ", duration: "02:58", seconds: 178},
+    {id: "90", title: "Bằng Lòng Cảm Tạ Chúng Con Bước Vào Siôn", link: "https://book.watv.org/newsong/newsong90", topic: "Cảm tạ", duration: "02:28", seconds: 148},
+    {id: "91", title: "Thật Là Phước Lành Nhiều Biết Bao!", link: "https://book.watv.org/newsong/newsong91", topic: "Cảm tạ", duration: "02:58", seconds: 178},
+    {id: "92", title: "Trở Nên Hoa Sự Sống Đẹp Đẽ Nở Rộ", link: "https://book.watv.org/newsong/newsong92", topic: "Cảm tạ", duration: "02:52", seconds: 172},
+    {id: "93", title: "Mẹ Của Con Càng Gọi Càng Nhớ!", link: "https://book.watv.org/newsong/newsong93", topic: "Cảm tạ", duration: "02:52", seconds: 172},
+    {id: "94", title: "Thưa Mẹ Ơi! Thưa Mẹ Ơi! Ồ! Mẹ Của Con Ơi!", link: "https://book.watv.org/newsong/newsong94", topic: "Cảm tạ", duration: "02:35", seconds: 155},
+    {id: "95", title: "Niềm Vui Lớn Này Trào Dâng Ra Như Suối Nước", link: "https://book.watv.org/newsong/newsong95", topic: "Cảm tạ", duration: "02:10", seconds: 130},
+    {id: "96", title: "Đấng Chí Thánh Và Quyền Năng", link: "https://book.watv.org/newsong/newsong96", topic: "Cảm tạ", duration: "01:42", seconds: 102},
+    {id: "97", title: "Ấy Là Vinh Quang Vô Hạn", link: "https://book.watv.org/newsong/newsong97", topic: "Cảm tạ", duration: "02:27", seconds: 147},
+    {id: "98", title: "Tấm Lòng Chúng Con Đầy Dẫy Những Gì?", link: "https://book.watv.org/newsong/newsong98", topic: "Cảm tạ", duration: "02:26", seconds: 146},
+    {id: "99", title: "Nhân Sinh Là Gì?", link: "https://book.watv.org/newsong/newsong99", topic: "Cảm tạ", duration: "02:42", seconds: 162},
+	{id: "100", title: "Tình Yêu Thương Lớn Lao Vô Đối Của Mẹ", link: "https://book.watv.org/newsong/newsong100", topic: "Cảm tạ", duration: "02:18", seconds: 138},
+    {id: "101", title: "Trở Nên Hột Lúa Mì Chết Đi", link: "https://book.watv.org/newsong/newsong101", topic: "Đức tin", duration: "02:00", seconds: 120},
+    {id: "102", title: "Nên Thánh Và Tin Kính", link: "https://book.watv.org/newsong/newsong102", topic: "Đức tin", duration: "02:27", seconds: 147},
+    {id: "103", title: "Người Dân Ngài Lựa Chọn", link: "https://book.watv.org/newsong/newsong103", topic: "Đức tin", duration: "02:44", seconds: 164},
+    {id: "104", title: "Là Chiên Con", link: "https://book.watv.org/newsong/newsong104", topic: "Đức tin", duration: "02:17", seconds: 137},
+    {id: "105", title: "Chúng Tôi Đi Theo Ban Mênchixêđéc", link: "https://book.watv.org/newsong/newsong105", topic: "Đức tin", duration: "02:55", seconds: 175},
+    {id: "106", title: "Yêu Mến Điều Răn Của Đức Chúa Trời Hơn Cả Vàng Ròng", link: "https://book.watv.org/newsong/newsong106", topic: "Đức tin", duration: "02:59", seconds: 179},
+    {id: "107", title: "Hãy Vượt Qua Biển Đỏ!", link: "https://book.watv.org/newsong/newsong107", topic: "Đức tin", duration: "02:14", seconds: 134},
+    {id: "108", title: "Hãy Xem Lễ Trọng Thể Giao Ước Mới!", link: "https://book.watv.org/newsong/newsong108", topic: "Đức tin", duration: "02:05", seconds: 125},
+    {id: "109", title: "Tin Tức Tốt Lành Của Sự Sống", link: "https://book.watv.org/newsong/newsong109", topic: "Đức tin", duration: "02:59", seconds: 179},
+    {id: "110", title: "Ở Tại Nơi Chí Thánh, Đấng Rất Chí Tôn Tỏ Hình Ảnh Ngài", link: "https://book.watv.org/newsong/newsong110", topic: "Đức tin", duration: "05:08", seconds: 308},
+    {id: "111", title: "Phước Cho Người Nào", link: "https://book.watv.org/newsong/newsong111", topic: "Đức tin", duration: "02:42", seconds: 162},
+    {id: "112", title: "Trở Nên Năm Người Nữ Khôn", link: "https://book.watv.org/newsong/newsong112", topic: "Đức tin", duration: "02:15", seconds: 135},
+    {id: "113", title: "Từ Nơi Hoang Vu Đồng Vắng Gồ Ghề", link: "https://book.watv.org/newsong/newsong113", topic: "Đức tin", duration: "03:21", seconds: 201},
+    {id: "114", title: "Hãy Tán Dương Đấng An Xang Hồng!", link: "https://book.watv.org/newsong/newsong114", topic: "Đức tin", duration: "04:37", seconds: 277},
+    {id: "115", title: "Việc Dựng Nên Đền Thánh Của Mẹ", link: "https://book.watv.org/newsong/newsong115", topic: "Đức tin", duration: "03:46", seconds: 226},
+    {id: "116", title: "Đền Thờ Tinh Khiết Đón Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong116", topic: "Đức tin", duration: "03:19", seconds: 199},
+    {id: "117", title: "Với Người Nào Có Ý Định Tốt", link: "https://book.watv.org/newsong/newsong117", topic: "Đức tin", duration: "03:06", seconds: 186},
+    {id: "118", title: "Các Thánh Đồ Hội Thánh Sơ Khai Gìn Giữ Giao Ước Mới", link: "https://book.watv.org/newsong/newsong118", topic: "Đức tin", duration: "03:06", seconds: 186},
+    {id: "119", title: "Như Đức Tin Tuyệt Đối Ápraham", link: "https://book.watv.org/newsong/newsong119", topic: "Đức tin", duration: "02:35", seconds: 155},
+    {id: "120", title: "Đức Chúa Trời Chiếu Ánh Sáng Lẽ Thật", link: "https://book.watv.org/newsong/newsong120", topic: "Đức tin", duration: "02:24", seconds: 144},
+    {id: "121", title: "Ngôi Sao Của Siôn", link: "https://book.watv.org/newsong/newsong121", topic: "Đức tin", duration: "03:07", seconds: 187},
+    {id: "122", title: "Ngày Ngày Cùng Nhau Nhóm Hiệp Lại", link: "https://book.watv.org/newsong/newsong122", topic: "Đức tin", duration: "02:34", seconds: 154},
+    {id: "123", title: "Ngài Thật Là Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong123", topic: "Đức tin", duration: "02:43", seconds: 163},
+    {id: "124", title: "Thật Ta Là Sự Phục Sinh!", link: "https://book.watv.org/newsong/newsong124", topic: "Đức tin", duration: "02:20", seconds: 140},
+    {id: "125", title: "Giọng Tiếng Khẩn Thiết Của Cha", link: "https://book.watv.org/newsong/newsong125", topic: "Đức tin", duration: "01:47", seconds: 107},
+    {id: "126", title: "Cha An Xang Hồng Ngự Đến", link: "https://book.watv.org/newsong/newsong126", topic: "Đức tin", duration: "02:22", seconds: 142},
+    {id: "127", title: "Thật Chí Thánh Chí Thánh Là Đấng An Xang Hồng", link: "https://book.watv.org/newsong/newsong127", topic: "Đức tin", duration: "02:38", seconds: 158},
+    {id: "128", title: "Đấng Cứu Chúa Đến Từ Phương Đông!", link: "https://book.watv.org/newsong/newsong128", topic: "Đức tin", duration: "02:41", seconds: 161},
+    {id: "129", title: "Ngài Đã Sáng Tạo Chúng Con", link: "https://book.watv.org/newsong/newsong129", topic: "Đức tin", duration: "01:54", seconds: 114},
+    {id: "130", title: "Hãy Vừa Thổi Kèn! Hãy Đi Vòng Quanh Thành!", link: "https://book.watv.org/newsong/newsong130", topic: "Đức tin", duration: "01:22", seconds: 82},
+    {id: "131", title: "Giọng Tiếng Của Mẹ", link: "https://book.watv.org/newsong/newsong131", topic: "Đức tin", duration: "04:17", seconds: 257},
+    {id: "132", title: "Chiếu Từ Phương Đông Mặt Trời Mọc Lên", link: "https://book.watv.org/newsong/newsong132", topic: "Đức tin", duration: "02:06", seconds: 126},
+    {id: "133", title: "Tôi Không Ghen Ghét", link: "https://book.watv.org/newsong/newsong133", topic: "Đức tin", duration: "03:13", seconds: 193},
+    {id: "134", title: "Hỡi Những Người Kính Sợ Đức Chúa Trời Mẹ", link: "https://book.watv.org/newsong/newsong134", topic: "Đức tin", duration: "01:43", seconds: 103},
+    {id: "135", title: "Người Nào Có Đức Tin Đẹp", link: "https://book.watv.org/newsong/newsong135", topic: "Đức tin", duration: "02:16", seconds: 136},
+    {id: "136", title: "Cho Chúng Con Làm Ngôi Sao Của Mẹ", link: "https://book.watv.org/newsong/newsong136", topic: "Đức tin", duration: "02:57", seconds: 177},
+    {id: "137", title: "Môise Cùng Mọi Đấng Tiên Tri", link: "https://book.watv.org/newsong/newsong137", topic: "Đức tin", duration: "02:05", seconds: 125},
+    {id: "138", title: "Người Nào Thắng", link: "https://book.watv.org/newsong/newsong138", topic: "Đức tin", duration: "02:15", seconds: 135},
+    {id: "139", title: "Giọng Đức Chúa Trời Mẹ", link: "https://book.watv.org/newsong/newsong139", topic: "Đức tin", duration: "02:41", seconds: 161},
+    {id: "140", title: "Đức Chúa Trời Thật Chí Thánh Ban Nước Sự Sống", link: "https://book.watv.org/newsong/newsong140", topic: "Đức tin", duration: "02:10", seconds: 130},
+    {id: "141", title: "Giêrusalem, Nguồn Nước Sự Sống", link: "https://book.watv.org/newsong/newsong141", topic: "Đức tin", duration: "02:03", seconds: 123},
+    {id: "142", title: "Cuộc Đời Cha Trong Ba Mươi Bảy Năm", link: "https://book.watv.org/newsong/newsong142", topic: "Đức tin", duration: "02:27", seconds: 147},
+    {id: "143", title: "Ta Gọi Chim Ó Đến Từ Phương Đông!", link: "https://book.watv.org/newsong/newsong143", topic: "Đức tin", duration: "02:10", seconds: 130},
+    {id: "144", title: "Niềm Trông Mong Tôi, Cùng Sự Sống Tôi", link: "https://book.watv.org/newsong/newsong144", topic: "Đức tin", duration: "02:03", seconds: 123},
+    {id: "145", title: "Nơi Yên Nghỉ Của Linh Hồn Chúng Ta", link: "https://book.watv.org/newsong/newsong145", topic: "Đức tin", duration: "02:15", seconds: 135},
+    {id: "146", title: "Cây Gậy Của Môise", link: "https://book.watv.org/newsong/newsong146", topic: "Đức tin", duration: "03:02", seconds: 182},
+    {id: "147", title: "Người Tin Danh Mới Đấng An Xang Hồng", link: "https://book.watv.org/newsong/newsong147", topic: "Đức tin", duration: "01:36", seconds: 96},
+    {id: "148", title: "Luật Lệ Của Đức Chúa Trời Là Trọn Vẹn", link: "https://book.watv.org/newsong/newsong148", topic: "Đức tin", duration: "02:09", seconds: 129},
+    {id: "149", title: "Người Nào Sẽ Lên Núi Siôn Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong149", topic: "Đức tin", duration: "02:11", seconds: 131},
+    {id: "150", title: "Nay Tôi Xin Để Lại Một Lời Dặn Dò Cuối Cùng", link: "https://book.watv.org/newsong/newsong150", topic: "Đức tin", duration: "03:00", seconds: 180},
+	{id: "151", title: "Ngài Cứu Rỗi Con Này", link: "https://book.watv.org/newsong/newsong151", topic: "Đức tin", duration: "02:58", seconds: 178},
+    {id: "152", title: "Theo Lời Tiên Tri Đấng An Xang Hồng", link: "https://book.watv.org/newsong/newsong152", topic: "Đức tin", duration: "02:33", seconds: 153},
+    {id: "153", title: "Đức Chúa Trời Cha Của Tôi Đã Đến Rồi", link: "https://book.watv.org/newsong/newsong153", topic: "Đức tin", duration: "02:21", seconds: 141},
+    {id: "154", title: "Chúng Ta Cũng Sẽ Đi Theo Mẹ", link: "https://book.watv.org/newsong/newsong154", topic: "Đức tin", duration: "03:00", seconds: 180},
+    {id: "155", title: "Cội Rễ Của Vua Đavít", link: "https://book.watv.org/newsong/newsong155", topic: "Đức tin", duration: "02:27", seconds: 147},
+    {id: "156", title: "Ta Sẽ Giúp Đỡ Ngươi", link: "https://book.watv.org/newsong/newsong156", topic: "Đức tin", duration: "01:56", seconds: 116},
+    {id: "157", title: "Tôi Đây Giống Như Cây Bá Hương", link: "https://book.watv.org/newsong/newsong157", topic: "Đức tin", duration: "02:50", seconds: 170},
+    {id: "158", title: "Cha An Xang Hồng Đến Thế Gian Này Đích Thân Lập Nên", link: "https://book.watv.org/newsong/newsong158", topic: "Đức tin", duration: "03:52", seconds: 232},
+    {id: "159", title: "Để Tìm Kiếm Con Cái Của Thiên Đàng", link: "https://book.watv.org/newsong/newsong159", topic: "Đức tin", duration: "04:06", seconds: 246},
+    {id: "160", title: "Bởi Tiếng Hô Vang Của Giôsuê", link: "https://book.watv.org/newsong/newsong160", topic: "Đức tin", duration: "02:30", seconds: 150},
+    {id: "161", title: "Tôi Sẽ Lấy Gì Làm Cho Mẹ Được Vui Mừng", link: "https://book.watv.org/newsong/newsong161", topic: "Đức tin", duration: "02:04", seconds: 124},
+    {id: "162", title: "Xin Hãy Ban Cho Con Sức Mới", link: "https://book.watv.org/newsong/newsong162", topic: "Đức tin", duration: "02:00", seconds: 120},
+    {id: "163", title: "Ta Đã Đến Rồi", link: "https://book.watv.org/newsong/newsong163", topic: "Đức tin", duration: "02:42", seconds: 162},
+    {id: "164", title: "Hôm Nay Tôi Cũng Đi Đến Siôn", link: "https://book.watv.org/newsong/newsong164", topic: "Đức tin", duration: "02:28", seconds: 148},
+    {id: "165", title: "Đức Chúa Trời Biết Khởi Đầu Và Sau Cùng", link: "https://book.watv.org/newsong/newsong165", topic: "Đức tin", duration: "02:32", seconds: 152},
+    {id: "166", title: "Ngọn Đèn Chiếu Soi Thế Gian", link: "https://book.watv.org/newsong/newsong166", topic: "Đức tin", duration: "02:38", seconds: 158},
+    {id: "167", title: "Ồ! Thưa Mẹ! Sự Sống Chúng Con!", link: "https://book.watv.org/newsong/newsong167", topic: "Đức tin", duration: "02:26", seconds: 146},
+    {id: "168", title: "Trên Con Đường Nhân Sinh Tối Tăm Mờ Mịt", link: "https://book.watv.org/newsong/newsong168", topic: "Đức tin", duration: "02:59", seconds: 179},
+    {id: "169", title: "Bởi Phép Báptêm", link: "https://book.watv.org/newsong/newsong169", topic: "Đức tin", duration: "03:18", seconds: 198},
+    {id: "170", title: "Tôi Sẽ Luôn Sống Trong Ân Huệ Lớn Của Cha", link: "https://book.watv.org/newsong/newsong170", topic: "Đức tin", duration: "02:35", seconds: 155},
+    {id: "171", title: "Khi Chúng Con Vẫn Đi Đường Thế Gian", link: "https://book.watv.org/newsong/newsong171", topic: "Đức tin", duration: "02:34", seconds: 154},
+    {id: "172", title: "Cha, Sự Sống Của Con", link: "https://book.watv.org/newsong/newsong172", topic: "Đức tin", duration: "03:15", seconds: 195},
+    {id: "173", title: "Tại Trước Đức Chúa Trời Chí Tôn", link: "https://book.watv.org/newsong/newsong173", topic: "Đức tin", duration: "02:15", seconds: 135},
+    {id: "174", title: "Đức Chúa Trời Mẹ Là Đường Đi Là Lẽ Thật", link: "https://book.watv.org/newsong/newsong174", topic: "Đức tin", duration: "02:27", seconds: 147},
+    {id: "175", title: "Lòng Như Ruộng Hoang Cằn Cỗi Cứng Cỏi", link: "https://book.watv.org/newsong/newsong175", topic: "Đức tin", duration: "02:42", seconds: 162},
+    {id: "176", title: "Đức Chúa Trời Phán Với Ápraham", link: "https://book.watv.org/newsong/newsong176", topic: "Đức tin", duration: "02:34", seconds: 154},
+    {id: "177", title: "Ta Nôn Nả Làm Điều Ấy", link: "https://book.watv.org/newsong/newsong177", topic: "Đức tin", duration: "02:02", seconds: 122},
+    {id: "178", title: "Tôi Bắt Đầu Con Đường Này", link: "https://book.watv.org/newsong/newsong178", topic: "Đức tin", duration: "03:08", seconds: 188},
+    {id: "179", title: "Nay Tôi Đang Đi Theo Sau Con Đường", link: "https://book.watv.org/newsong/newsong179", topic: "Đức tin", duration: "02:43", seconds: 163},
+    {id: "180", title: "Kẻ Buồn Rầu Vì Hội Lớn", link: "https://book.watv.org/newsong/newsong180", topic: "Đức tin", duration: "02:05", seconds: 125},
+    {id: "181", title: "Danh Vinh Hiển Của Giêrusalem Mới", link: "https://book.watv.org/newsong/newsong181", topic: "Đức tin", duration: "02:06", seconds: 126},
+    {id: "182", title: "Một Người Làm Thay Đổi Cả Thế Gian", link: "https://book.watv.org/newsong/newsong182", topic: "Đức tin", duration: "02:42", seconds: 162},
+    {id: "183", title: "Đường Về Quê Hương Lúc Hoàng Hôn", link: "https://book.watv.org/newsong/newsong183", topic: "Sự trông cậy", duration: "02:15", seconds: 135},
+    {id: "184", title: "Trên Ngọn Đồi Ánh Sáng Chói Lòa", link: "https://book.watv.org/newsong/newsong184", topic: "Sự trông cậy", duration: "02:41", seconds: 161},
+    {id: "185", title: "Quê Hương Vĩnh Viễn Trên Trời Của Tôi!", link: "https://book.watv.org/newsong/newsong185", topic: "Sự trông cậy", duration: "03:06", seconds: 186},
+    {id: "186", title: "Hãy Ngước Mắt Ngắm Nhìn Vũ Trụ Bao La", link: "https://book.watv.org/newsong/newsong186", topic: "Sự trông cậy", duration: "02:22", seconds: 142},
+    {id: "187", title: "Vườn Thiên Quốc Cha Trên Trời Ngự", link: "https://book.watv.org/newsong/newsong187", topic: "Sự trông cậy", duration: "03:19", seconds: 199},
+    {id: "188", title: "Quê Hương Tôi Trên Trời Xa Kia!", link: "https://book.watv.org/newsong/newsong188", topic: "Sự trông cậy", duration: "04:06", seconds: 246},
+    {id: "189", title: "Ở Trên Bờ Sông Sự Sống Đẹp Đẽ Trong Ngần", link: "https://book.watv.org/newsong/newsong189", topic: "Sự trông cậy", duration: "03:07", seconds: 187},
+    {id: "190", title: "Ngày Về Nước Thiên Đàng Trong Vinh Hiển", link: "https://book.watv.org/newsong/newsong190", topic: "Sự trông cậy", duration: "01:56", seconds: 116},
+    {id: "191", title: "Trong Tấm Lòng Tôi Tưởng Tượng Ra", link: "https://book.watv.org/newsong/newsong191", topic: "Sự trông cậy", duration: "02:02", seconds: 122},
+    {id: "192", title: "Giọng Tiếng Của Mẹ Thương Nhớ", link: "https://book.watv.org/newsong/newsong192", topic: "Sự trông cậy", duration: "03:24", seconds: 204},
+    {id: "193", title: "Đường Về Nơi Quê Hương", link: "https://book.watv.org/newsong/newsong193", topic: "Sự trông cậy", duration: "02:42", seconds: 162},
+    {id: "194", title: "Kẻ Chưa Được Trọn Vẹn Thuộc Về Đất", link: "https://book.watv.org/newsong/newsong194", topic: "Sự trông cậy", duration: "02:34", seconds: 154},
+    {id: "195", title: "Khi Vẫn Chưa Tiếp Nhận Cha Trên Trời", link: "https://book.watv.org/newsong/newsong195", topic: "Sự trông cậy", duration: "03:21", seconds: 201},
+    {id: "196", title: "Thế Giới Thiên Sứ Con Ao Ước Trở Về", link: "https://book.watv.org/newsong/newsong196", topic: "Sự trông cậy", duration: "04:13", seconds: 253},
+    {id: "197", title: "Biển Thủy Tinh Trong Suốt Trên Núi Thánh", link: "https://book.watv.org/newsong/newsong197", topic: "Sự trông cậy", duration: "03:08", seconds: 188},
+    {id: "198", title: "Hỡi Êđen Ta Thật Muốn Đi!", link: "https://book.watv.org/newsong/newsong198", topic: "Sự trông cậy", duration: "02:57", seconds: 177},
+    {id: "199", title: "Trong Thời Gian Vĩnh Viễn Đời Đời", link: "https://book.watv.org/newsong/newsong199", topic: "Sự trông cậy", duration: "02:01", seconds: 121},
+    {id: "200", title: "Tiệc Tùng Vinh Hiển Nước Thiên Đàng", link: "https://book.watv.org/newsong/newsong200", topic: "Sự trông cậy", duration: "02:28", seconds: 148},
+	{id: "201", title: "Ban Cho Chúng Con Sự Sáng Láng", link: "https://book.watv.org/newsong/newsong201", topic: "Sự trông cậy", duration: "03:53", seconds: 233},
+    {id: "202", title: "Nào! Hãy Đến Trên Nơi Cao Kia", link: "https://book.watv.org/newsong/newsong202", topic: "Sự trông cậy", duration: "03:19", seconds: 199},
+    {id: "203", title: "Tôi là gì?", link: "https://book.watv.org/newsong/newsong203", topic: "Sự trông cậy", duration: "04:08", seconds: 248},
+    {id: "204", title: "Giao Ước Mới Đấng An Xang Hồng Lập Ra", link: "https://book.watv.org/newsong/newsong204", topic: "Sự trông cậy", duration: "02:21", seconds: 141},
+    {id: "205", title: "Hỡi Sự Sáng Ngự Trên Trời!", link: "https://book.watv.org/newsong/newsong205", topic: "Sự trông cậy", duration: "02:48", seconds: 168},
+    {id: "206", title: "Cha Trên Trời Kiếm Tìm Chúng Con", link: "https://book.watv.org/newsong/newsong206", topic: "Sự trông cậy", duration: "03:05", seconds: 185},
+    {id: "207", title: "Hãy Nhướng Mắt Lên Và Nhìn Xem", link: "https://book.watv.org/newsong/newsong207", topic: "Sự trông cậy", duration: "03:06", seconds: 186},
+    {id: "208", title: "Trong Giây Phút Chúng Ta Sẽ Biến Hóa!", link: "https://book.watv.org/newsong/newsong208", topic: "Sự trông cậy", duration: "03:33", seconds: 213},
+    {id: "209", title: "Như Chim Bay Hướng Về Trời", link: "https://book.watv.org/newsong/newsong209", topic: "Sự trông cậy", duration: "02:38", seconds: 158},
+    {id: "210", title: "Ngôi Tôn Quý Trên Thiên Thượng", link: "https://book.watv.org/newsong/newsong210", topic: "Sự trông cậy", duration: "05:37", seconds: 337},
+    {id: "211", title: "Ghi Khắc Sâu Trong Tấm Lòng Mẹ", link: "https://book.watv.org/newsong/newsong211", topic: "Sự trông cậy", duration: "02:32", seconds: 152},
+    {id: "212", title: "Tấm Lòng Của Con Duy Chỉ", link: "https://book.watv.org/newsong/newsong212", topic: "Sự trông cậy", duration: "02:32", seconds: 152},
+    {id: "213", title: "A! Quê Hương Trên Trời Kia Của Tôi", link: "https://book.watv.org/newsong/newsong213", topic: "Sự trông cậy", duration: "03:14", seconds: 194},
+    {id: "214", title: "Dầu Con Cầu Nguyện Nài Xin Nước Mắt", link: "https://book.watv.org/newsong/newsong214", topic: "Sự trông cậy", duration: "03:19", seconds: 199},
+    {id: "215", title: "Quê Hương Tôi Hằng Nhớ Thương!", link: "https://book.watv.org/newsong/newsong215", topic: "Sự trông cậy", duration: "02:27", seconds: 147},
+    {id: "216", title: "Đức Chúa Trời Ban Sự Sáng", link: "https://book.watv.org/newsong/newsong216", topic: "Sự trông cậy", duration: "03:39", seconds: 219},
+    {id: "217", title: "Anh Em Khiêm Tốn, Chị Em Nhu Mì", link: "https://book.watv.org/newsong/newsong217", topic: "Sự trông cậy", duration: "02:25", seconds: 145},
+    {id: "218", title: "Quê Hương", link: "https://book.watv.org/newsong/newsong218", topic: "Sự trông cậy", duration: "04:08", seconds: 248},
+    {id: "219", title: "Khi Cửa Trên Trời Được Mở Ra", link: "https://book.watv.org/newsong/newsong219", topic: "Sự trông cậy", duration: "01:36", seconds: 96},
+    {id: "220", title: "Buổi Sáng Phục Sinh Đang Sáng Dần Lên!", link: "https://book.watv.org/newsong/newsong220", topic: "Sự trông cậy", duration: "02:44", seconds: 164},
+    {id: "221", title: "Nước Thiên Đàng Ở Trong Tôi", link: "https://book.watv.org/newsong/newsong221", topic: "Sự trông cậy", duration: "02:45", seconds: 165},
+    {id: "222", title: "Ồ! Nước Thiên Đàng Đức Chúa Trời Sắm Sẵn", link: "https://book.watv.org/newsong/newsong222", topic: "Sự trông cậy", duration: "01:49", seconds: 109},
+    {id: "223", title: "Sự Đớn Đau Cuộc Đời Thế Gian", link: "https://book.watv.org/newsong/newsong223", topic: "Sự trông cậy", duration: "01:53", seconds: 113},
+    {id: "224", title: "Xòe Rộng Đôi Cánh Màu Bạc Tươi Đẹp", link: "https://book.watv.org/newsong/newsong224", topic: "Sự trông cậy", duration: "04:01", seconds: 241},
+    {id: "225", title: "Đức Chúa Trời Cha Đã Sáng Tạo Sự Sáng Ngời Rực Rỡ", link: "https://book.watv.org/newsong/newsong225", topic: "Tình yêu thương", duration: "04:37", seconds: 277},
+    {id: "226", title: "Chẳng Cảm Nhận Được Sao?", link: "https://book.watv.org/newsong/newsong226", topic: "Tình yêu thương", duration: "02:34", seconds: 154},
+    {id: "227", title: "Hình Ảnh Ấy Thật Tốt Đẹp Thay!", link: "https://book.watv.org/newsong/newsong227", topic: "Tình yêu thương", duration: "03:42", seconds: 222},
+    {id: "228", title: "Dầu Ngài Cưỡi Con Lừa Con", link: "https://book.watv.org/newsong/newsong228", topic: "Tình yêu thương", duration: "02:42", seconds: 162},
+    {id: "229", title: "Tình Yêu Thương Mẹ Ban Cho", link: "https://book.watv.org/newsong/newsong229", topic: "Tình yêu thương", duration: "02:33", seconds: 153},
+    {id: "230", title: "Hỡi Sự Sống!", link: "https://book.watv.org/newsong/newsong230", topic: "Tình yêu thương", duration: "03:05", seconds: 185},
+    {id: "231", title: "Mong Ước Nơi Đẹp Đẽ", link: "https://book.watv.org/newsong/newsong231", topic: "Tình yêu thương", duration: "03:38", seconds: 218},
+    {id: "232", title: "Ồ! Thật Lạ Lùng! Tình Yêu Thương Lớn Lao!", link: "https://book.watv.org/newsong/newsong232", topic: "Tình yêu thương", duration: "03:02", seconds: 182},
+    {id: "233", title: "Tình Yêu Thương Hay Nhịn Nhục", link: "https://book.watv.org/newsong/newsong233", topic: "Tình yêu thương", duration: "01:53", seconds: 113},
+    {id: "234", title: "Ừm! Khi Con Khóc Một Mình", link: "https://book.watv.org/newsong/newsong234", topic: "Tình yêu thương", duration: "03:36", seconds: 216},
+    {id: "235", title: "Hôm Nay Tôi Thấy Hương Khí Siôn", link: "https://book.watv.org/newsong/newsong235", topic: "Tình yêu thương", duration: "02:29", seconds: 149},
+    {id: "236", title: "Lạy Thưa Cha! Ngài Chịu Đựng Thời Gian Đau Đớn", link: "https://book.watv.org/newsong/newsong236", topic: "Tình yêu thương", duration: "02:35", seconds: 155},
+    {id: "237", title: "Tình Yêu Thương Anh Em Thiện Lành Siôn", link: "https://book.watv.org/newsong/newsong237", topic: "Tình yêu thương", duration: "03:43", seconds: 223},
+    {id: "238", title: "Đức Chúa Trời Mẹ Giàu Yêu Thương", link: "https://book.watv.org/newsong/newsong238", topic: "Tình yêu thương", duration: "03:41", seconds: 221},
+    {id: "239", title: "Ai Trên Thế Gian Quên Đi Ngủ Chăng?", link: "https://book.watv.org/newsong/newsong239", topic: "Tình yêu thương", duration: "02:41", seconds: 161},
+    {id: "240", title: "Mẹ Là Đấng Tình Yêu Thương Chân Thật", link: "https://book.watv.org/newsong/newsong240", topic: "Tình yêu thương", duration: "02:04", seconds: 124},
+    {id: "241", title: "Ôi! Hôm Nay, Ngày Đẹp Như Thế Này", link: "https://book.watv.org/newsong/newsong241", topic: "Tình yêu thương", duration: "02:22", seconds: 142},
+    {id: "242", title: "Sự Sáng Vinh Quang Rất Chí Tôn", link: "https://book.watv.org/newsong/newsong242", topic: "Tình yêu thương", duration: "03:30", seconds: 210},
+    {id: "243", title: "À! Thưa Mẹ Của Chính Con", link: "https://book.watv.org/newsong/newsong243", topic: "Tình yêu thương", duration: "02:41", seconds: 161},
+    {id: "244", title: "Ồ! Đức Chúa Trời Của Con Thật Đáng Cảm Tạ", link: "https://book.watv.org/newsong/newsong244", topic: "Tình yêu thương", duration: "02:52", seconds: 172},
+    {id: "245", title: "Trong Tấm Lòng Chúng Ta", link: "https://book.watv.org/newsong/newsong245", topic: "Tình yêu thương", duration: "02:05", seconds: 125},
+    {id: "246", title: "Thay Thế Cho Lỗi Tội Của Tôi", link: "https://book.watv.org/newsong/newsong246", topic: "Tình yêu thương", duration: "02:56", seconds: 176},
+    {id: "247", title: "Xin Cha Mẹ Đổ Đầy Ơn Phước!", link: "https://book.watv.org/newsong/newsong247", topic: "Tình yêu thương", duration: "02:21", seconds: 141},
+    {id: "248", title: "Ngài Phán Hãy Yêu Thương Nhau!", link: "https://book.watv.org/newsong/newsong248", topic: "Tình yêu thương", duration: "04:28", seconds: 268},
+    {id: "249", title: "Tình Yêu Thương Không Trông Thấy Được", link: "https://book.watv.org/newsong/newsong249", topic: "Tình yêu thương", duration: "03:47", seconds: 227},
+    {id: "250", title: "Dẫu Cho Đến Đỗi Trời Của Các Từng Trời", link: "https://book.watv.org/newsong/newsong250", topic: "Tình yêu thương", duration: "04:09", seconds: 249},
+	{id: "251", title: "Toàn Trái Đất Chỉ Là Hỗn Độn", link: "https://book.watv.org/newsong/newsong251", topic: "Tình yêu thương", duration: "03:03", seconds: 183},
+    {id: "252", title: "Vườn Siôn Luôn Tuôn Trào Tình Yêu Trên Trời", link: "https://book.watv.org/newsong/newsong252", topic: "Tình yêu thương", duration: "02:21", seconds: 141},
+    {id: "253", title: "Xin Hãy Mặc Áo Lễ Trên Trời!", link: "https://book.watv.org/newsong/newsong253", topic: "Tình yêu thương", duration: "02:35", seconds: 155},
+    {id: "254", title: "Chúng Tôi Là Anh Em Có Tấm Lòng Đẹp", link: "https://book.watv.org/newsong/newsong254", topic: "Tình yêu thương", duration: "02:27", seconds: 147},
+    {id: "255", title: "Vì Lang Thang Trong Tối Tăm", link: "https://book.watv.org/newsong/newsong255", topic: "Tình yêu thương", duration: "02:26", seconds: 146},
+    {id: "256", title: "Hỡi Anh Em Thật Nhớ Thương Trên Trời Của Tôi!", link: "https://book.watv.org/newsong/newsong256", topic: "Tình yêu thương", duration: "03:38", seconds: 218},
+    {id: "257", title: "Hầu Việc Anh Em", link: "https://book.watv.org/newsong/newsong257", topic: "Tình yêu thương", duration: "02:32", seconds: 152},
+    {id: "258", title: "Hỡi Người Rất Yêu Dấu Của Tôi!", link: "https://book.watv.org/newsong/newsong258", topic: "Tình yêu thương", duration: "01:41", seconds: 101},
+    {id: "259", title: "Anh Em Ăn Ở Hòa Thuận Nhau", link: "https://book.watv.org/newsong/newsong259", topic: "Tình yêu thương", duration: "02:41", seconds: 161},
+    {id: "260", title: "Chúng Con Thảy Đều Như Là Con Chiên", link: "https://book.watv.org/newsong/newsong260", topic: "Tình yêu thương", duration: "02:45", seconds: 165},
+    {id: "261", title: "Ly Biệt Sáu Ngàn Năm", link: "https://book.watv.org/newsong/newsong261", topic: "Tình yêu thương", duration: "02:33", seconds: 153},
+    {id: "262", title: "Tình Yêu Thương, Sự Vui Mừng, Bình An", link: "https://book.watv.org/newsong/newsong262", topic: "Tình yêu thương", duration: "02:40", seconds: 160},
+    {id: "263", title: "Hãy Trở Thành Một Hột Giống Lúa Mì Chết Đi!", link: "https://book.watv.org/newsong/newsong263", topic: "Tình yêu thương", duration: "02:05", seconds: 125},
+    {id: "264", title: "Bởi Được Đức Thánh Linh Cảm Động", link: "https://book.watv.org/newsong/newsong264", topic: "Tình yêu thương", duration: "02:52", seconds: 172},
+    {id: "265", title: "Chúng Ta Hãy Cùng Yêu Thương Lẫn Nhau", link: "https://book.watv.org/newsong/newsong265", topic: "Tình yêu thương", duration: "02:05", seconds: 125},
+    {id: "266", title: "Sự Trông Cậy Hay Nước Thiên Đàng", link: "https://book.watv.org/newsong/newsong266", topic: "Tình yêu thương", duration: "03:11", seconds: 191},
+    {id: "267", title: "Con Cái Lời Hứa Như Ysác", link: "https://book.watv.org/newsong/newsong267", topic: "Tình yêu thương", duration: "02:01", seconds: 121},
+    {id: "268", title: "Đấng Đã Sáng Tạo Sự Sống Vĩnh Viễn", link: "https://book.watv.org/newsong/newsong268", topic: "Tình yêu thương", duration: "02:34", seconds: 154},
+    {id: "269", title: "Lạy Thưa Cha, Vì Sao Tình Yêu Thương Ngài", link: "https://book.watv.org/newsong/newsong269", topic: "Tình yêu thương", duration: "01:48", seconds: 108},
+    {id: "270", title: "Bởi Tình Yêu Thương Trên Thiên Thượng", link: "https://book.watv.org/newsong/newsong270", topic: "Tình yêu thương", duration: "02:30", seconds: 150},
+    {id: "271", title: "A! Vĩ Đại Thay Tình Yêu Thương Ấy", link: "https://book.watv.org/newsong/newsong271", topic: "Tình yêu thương", duration: "03:19", seconds: 199},
+    {id: "272", title: "Như Hình Ảnh Của Chúng Ta", link: "https://book.watv.org/newsong/newsong272", topic: "Tình yêu thương", duration: "02:27", seconds: 147},
+    {id: "273", title: "Thật Tôi Xin Lỗi! Vì Không Hiểu Cho Lòng Vết Thương", link: "https://book.watv.org/newsong/newsong273", topic: "Tình yêu thương", duration: "02:42", seconds: 162},
+    {id: "274", title: "Tiếng Tình Yêu Thương", link: "https://book.watv.org/newsong/newsong274", topic: "Tình yêu thương", duration: "02:20", seconds: 140},
+    {id: "275", title: "Cha Đến Đầu Cùng Đất Phương Đông", link: "https://book.watv.org/newsong/newsong275", topic: "Tình yêu thương", duration: "03:17", seconds: 197},
+    {id: "276", title: "Giêrusalem Nơi Ở Thánh Khiết", link: "https://book.watv.org/newsong/newsong276", topic: "Tình yêu thương", duration: "02:33", seconds: 153},
+    {id: "277", title: "Vào Sáng Sớm, Trong Ánh Sáng Ban Mai", link: "https://book.watv.org/newsong/newsong277", topic: "Tình yêu thương", duration: "02:04", seconds: 124},
+    {id: "278", title: "Giêrusalem Thành Yêu Thương", link: "https://book.watv.org/newsong/newsong278", topic: "Hy sinh", duration: "03:22", seconds: 202},
+    {id: "279", title: "Cho Chúng Con Hiểu Tình Yêu Thương Của Ngài", link: "https://book.watv.org/newsong/newsong279", topic: "Hy sinh", duration: "02:17", seconds: 137},
+    {id: "280", title: "Tình Yêu Thương Của Mẹ Trên Trời", link: "https://book.watv.org/newsong/newsong280", topic: "Hy sinh", duration: "02:24", seconds: 144},
+    {id: "281", title: "Nỗi Thống Khổ Của Cha", link: "https://book.watv.org/newsong/newsong281", topic: "Hy sinh", duration: "03:20", seconds: 200},
+    {id: "282", title: "Trái Của Thánh Linh", link: "https://book.watv.org/newsong/newsong282", topic: "Hy sinh", duration: "03:27", seconds: 207},
+    {id: "283", title: "Chúng Con Nghe Thấy Tiếng Phán Của Cha", link: "https://book.watv.org/newsong/newsong283", topic: "Hy sinh", duration: "04:09", seconds: 249},
+    {id: "284", title: "Hỡi Hy Sinh Thật Chí Thánh!", link: "https://book.watv.org/newsong/newsong284", topic: "Hy sinh", duration: "03:47", seconds: 227},
+    {id: "285", title: "Dưới Xiềng Xích Tối Tăm Và Sự Chết", link: "https://book.watv.org/newsong/newsong285", topic: "Hy sinh", duration: "02:17", seconds: 137},
+    {id: "286", title: "Lá Cây Vả Mới Đâm", link: "https://book.watv.org/newsong/newsong286", topic: "Hy sinh", duration: "02:26", seconds: 146},
+    {id: "287", title: "Mẹ Đi Dạo Giữa Những Hòn Ngọc Sáng Như Lửa", link: "https://book.watv.org/newsong/newsong287", topic: "Hy sinh", duration: "03:24", seconds: 204},
+    {id: "288", title: "Bàn Thờ Lễ Thiêu Chiên Con", link: "https://book.watv.org/newsong/newsong288", topic: "Hy sinh", duration: "03:02", seconds: 182},
+    {id: "289", title: "Để Tìm Con Cái", link: "https://book.watv.org/newsong/newsong289", topic: "Hy sinh", duration: "04:42", seconds: 282},
+    {id: "290", title: "Thưa Cha Trên Trời!", link: "https://book.watv.org/newsong/newsong290", topic: "Hy sinh", duration: "01:55", seconds: 115},
+    {id: "291", title: "Sao Cha Đã Chịu Đựng Hết Thảy Mọi Sự Đớn Đau?", link: "https://book.watv.org/newsong/newsong291", topic: "Hy sinh", duration: "02:49", seconds: 169},
+    {id: "292", title: "Để Tìm Các Con Cái Thật Yêu Dấu", link: "https://book.watv.org/newsong/newsong292", topic: "Hy sinh", duration: "02:49", seconds: 169},
+    {id: "293", title: "Hỡi Các Ngươi Là Kẻ Yêu Mến Giêrusalem", link: "https://book.watv.org/newsong/newsong293", topic: "Hy sinh", duration: "03:18", seconds: 198},
+    {id: "294", title: "Đích Thân Đức Chúa Trời Đã Đến", link: "https://book.watv.org/newsong/newsong294", topic: "Hy sinh", duration: "03:30", seconds: 210},
+    {id: "295", title: "Thật Cao Cả Sự Hy Sinh", link: "https://book.watv.org/newsong/newsong295", topic: "Hy sinh", duration: "02:56", seconds: 176},
+    {id: "296", title: "Hy Sinh Của Thầy Tế Lễ Thượng Phẩm", link: "https://book.watv.org/newsong/newsong296", topic: "Hy sinh", duration: "02:41", seconds: 161},
+    {id: "297", title: "Dầu Chặng Đường Chất Đầy Chông Gai", link: "https://book.watv.org/newsong/newsong297", topic: "Hy sinh", duration: "03:47", seconds: 227},
+    {id: "298", title: "Từ Bỏ Sau Lưng Vinh Quang Trên Trời", link: "https://book.watv.org/newsong/newsong298", topic: "Hy sinh", duration: "03:21", seconds: 201},
+    {id: "299", title: "Ban Cho Con Cái Sự Cứu Rỗi", link: "https://book.watv.org/newsong/newsong299", topic: "Hy sinh", duration: "02:42", seconds: 162},
+    {id: "300", title: "Trên Bàn Tay Thô Ráp Của Cha", link: "https://book.watv.org/newsong/newsong300", topic: "Hy sinh", duration: "03:28", seconds: 208},
+	{id: "301", title: "Để Đánh Thức Thế Gian Bao Phủ Bởi Tối Tăm", link: "https://book.watv.org/newsong/newsong301", topic: "Hy sinh", duration: "03:01", seconds: 181},
+    {id: "302", title: "Đô Thành Của Đức Chúa Trời, Hỡi Giêrusalem!", link: "https://book.watv.org/newsong/newsong302", topic: "Hy sinh", duration: "02:35", seconds: 155},
+    {id: "303", title: "Ađam Sau Hết Và Êva Sau Hết", link: "https://book.watv.org/newsong/newsong303", topic: "Hy sinh", duration: "02:30", seconds: 150},
+    {id: "304", title: "Ngày Tháng Sáu Ngàn Năm Qua", link: "https://book.watv.org/newsong/newsong304", topic: "Hy sinh", duration: "02:50", seconds: 170},
+    {id: "305", title: "Điều Đã Rao Truyền Cho Chúng Tôi", link: "https://book.watv.org/newsong/newsong305", topic: "Hy sinh", duration: "03:25", seconds: 205},
+    {id: "306", title: "Người Dấy Lên Từ Phương Đông", link: "https://book.watv.org/newsong/newsong306", topic: "Hy sinh", duration: "03:18", seconds: 198},
+    {id: "307", title: "Vườn Ghếtsêmanê Vào Đêm Hôm Ấy", link: "https://book.watv.org/newsong/newsong307", topic: "Hy sinh", duration: "03:44", seconds: 224},
+    {id: "308", title: "A Bo Ji! Dù Con Rất Muốn Gọi Thưa Cha", link: "https://book.watv.org/newsong/newsong308", topic: "Hối cải", duration: "02:38", seconds: 158},
+    {id: "309", title: "Tấm Lòng Của Hết Thảy Mọi Chúng Con", link: "https://book.watv.org/newsong/newsong309", topic: "Hối cải", duration: "02:57", seconds: 177},
+    {id: "310", title: "Mỗi Khi Nhìn Bằng Đôi Mắt Yêu Thương Của Cha Trên Trời", link: "https://book.watv.org/newsong/newsong310", topic: "Hối cải", duration: "02:56", seconds: 176},
+    {id: "311", title: "Bây Giờ Mới Hối Cải Trước Mặt Ngài!", link: "https://book.watv.org/newsong/newsong311", topic: "Hối cải", duration: "02:43", seconds: 163},
+    {id: "312", title: "Lạy Thưa Mẹ! Con Là Tội Nhân Đã Phạm Tội!", link: "https://book.watv.org/newsong/newsong312", topic: "Hối cải", duration: "03:23", seconds: 203},
+    {id: "313", title: "Hãy Ăn Năn! Vì Nước Thiên Đàng Đến Gần Rồi!", link: "https://book.watv.org/newsong/newsong313", topic: "Hối cải", duration: "02:05", seconds: 125},
+    {id: "314", title: "Dầu Là Đức Chúa Trời Êlôhim Thật Đáng Tôn Quý", link: "https://book.watv.org/newsong/newsong314", topic: "Hối cải", duration: "02:41", seconds: 161},
+    {id: "315", title: "Lạy Thưa Cha Là Đấng Ngự Trên Trời!", link: "https://book.watv.org/newsong/newsong315", topic: "Hối cải", duration: "02:32", seconds: 152},
+    {id: "316", title: "Giờ Chúng Con Ăn Năn Hối Cải", link: "https://book.watv.org/newsong/newsong316", topic: "Hối cải", duration: "02:32", seconds: 152},
+    {id: "317", title: "Con Là Chi Mà", link: "https://book.watv.org/newsong/newsong317", topic: "Hối cải", duration: "03:37", seconds: 217},
+    {id: "318", title: "Xin Rửa Tội Lỗi Của Con", link: "https://book.watv.org/newsong/newsong318", topic: "Hối cải", duration: "04:17", seconds: 257},
+    {id: "319", title: "Trước Đây Con Thật Chẳng Nhận Ra!", link: "https://book.watv.org/newsong/newsong319", topic: "Hối cải", duration: "03:43", seconds: 223},
+    {id: "320", title: "A! Anh Chị Em Của Tôi Thật Nhớ Thương!", link: "https://book.watv.org/newsong/newsong320", topic: "Truyền đạo", duration: "03:01", seconds: 181},
+    {id: "321", title: "Đấng An Xang Hồng Đến Xứ Phương Đông", link: "https://book.watv.org/newsong/newsong321", topic: "Truyền đạo", duration: "02:05", seconds: 125},
+    {id: "322", title: "Sự Sáng Vinh Hiển Đấng An Xang Hồng", link: "https://book.watv.org/newsong/newsong322", topic: "Truyền đạo", duration: "03:23", seconds: 203},
+    {id: "323", title: "Quê Hương Trên Trời Xưa Kia", link: "https://book.watv.org/newsong/newsong323", topic: "Truyền đạo", duration: "04:04", seconds: 244},
+    {id: "324", title: "Những Người Đi Rao Truyền Tin Lành", link: "https://book.watv.org/newsong/newsong324", topic: "Truyền đạo", duration: "01:25", seconds: 85},
+    {id: "325", title: "Để Làm Người Giúp Việc Của Giao Ước Mới", link: "https://book.watv.org/newsong/newsong325", topic: "Truyền đạo", duration: "01:28", seconds: 88},
+    {id: "326", title: "Bởi Lời Lẽ Thật Sanh Ra Chúng Con!", link: "https://book.watv.org/newsong/newsong326", topic: "Truyền đạo", duration: "03:12", seconds: 192},
+    {id: "327", title: "Hãy Rao Truyền Bảy Tỷ", link: "https://book.watv.org/newsong/newsong327", topic: "Truyền đạo", duration: "02:09", seconds: 129},
+    {id: "328", title: "Bởi Thịt Và Huyết Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong328", topic: "Truyền đạo", duration: "02:25", seconds: 145},
+    {id: "329", title: "Tổ Ấm Tình Yêu Thương", link: "https://book.watv.org/newsong/newsong329", topic: "Truyền đạo", duration: "02:20", seconds: 140},
+    {id: "330", title: "Lòng Trông Cậy Trên Trời", link: "https://book.watv.org/newsong/newsong330", topic: "Truyền đạo", duration: "02:26", seconds: 146},
+    {id: "331", title: "Trên Vọng Canh Thành Giêrusalem", link: "https://book.watv.org/newsong/newsong331", topic: "Truyền đạo", duration: "02:00", seconds: 120},
+    {id: "332", title: "Đức Chúa Trời Êlôhim Tạo Nên", link: "https://book.watv.org/newsong/newsong332", topic: "Truyền đạo", duration: "02:16", seconds: 136},
+    {id: "333", title: "Nông Phu Lẽ Thật", link: "https://book.watv.org/newsong/newsong333", topic: "Truyền đạo", duration: "02:59", seconds: 179},
+    {id: "334", title: "Hãy Thổi Kèn Tin Lành!", link: "https://book.watv.org/newsong/newsong334", topic: "Truyền đạo", duration: "02:11", seconds: 131},
+    {id: "335", title: "Sứ Mệnh Vĩ Đại Cứu Rỗi Cả Thế Giới", link: "https://book.watv.org/newsong/newsong335", topic: "Truyền đạo", duration: "03:25", seconds: 205},
+    {id: "336", title: "Hãy Truyền Sự Cứu Rỗi Của Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong336", topic: "Truyền đạo", duration: "02:21", seconds: 141},
+    {id: "337", title: "Nào! Hãy Nhướng Mắt Nhìn Đồng Ruộng", link: "https://book.watv.org/newsong/newsong337", topic: "Truyền đạo", duration: "01:56", seconds: 116},
+    {id: "338", title: "Trên Tay Hãy Cầm Đuốc Lửa Bừng Cháy Lên!", link: "https://book.watv.org/newsong/newsong338", topic: "Truyền đạo", duration: "02:02", seconds: 122},
+    {id: "339", title: "Thánh Linh Đức Chúa Trời Cha Đã Hứa Ban", link: "https://book.watv.org/newsong/newsong339", topic: "Truyền đạo", duration: "01:56", seconds: 116},
+    {id: "340", title: "Mùa Tin Lành Nước Thiên Đàng", link: "https://book.watv.org/newsong/newsong340", topic: "Truyền đạo", duration: "02:32", seconds: 152},
+    {id: "341", title: "Mang Theo Gươm Lời Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong341", topic: "Truyền đạo", duration: "02:24", seconds: 144},
+    {id: "342", title: "Hỡi Các Dũng Sĩ Lẽ Thật", link: "https://book.watv.org/newsong/newsong342", topic: "Truyền đạo", duration: "02:26", seconds: 146},
+    {id: "343", title: "Theo Con Đường Cha An Xang Hồng Đã Đi", link: "https://book.watv.org/newsong/newsong343", topic: "Truyền đạo", duration: "02:24", seconds: 144},
+    {id: "344", title: "Hãy Tỉnh Thức, Hãy Trỗi Dậy Lên!", link: "https://book.watv.org/newsong/newsong344", topic: "Truyền đạo", duration: "02:20", seconds: 140},
+    {id: "345", title: "Mặc Lấy Quyền Năng Của Ngài", link: "https://book.watv.org/newsong/newsong345", topic: "Truyền đạo", duration: "02:35", seconds: 155},
+    {id: "346", title: "Hãy Đi Đến Thế Giới!", link: "https://book.watv.org/newsong/newsong346", topic: "Truyền đạo", duration: "02:13", seconds: 133},
+    {id: "347", title: "Nước Thiên Đàng Trước Mắt Chúng Ta!", link: "https://book.watv.org/newsong/newsong347", topic: "Truyền đạo", duration: "02:49", seconds: 169},
+    {id: "348", title: "Từ Đầu Cùng Đất, Nước Nhỏ Phương Đông", link: "https://book.watv.org/newsong/newsong348", topic: "Truyền đạo", duration: "02:05", seconds: 125},
+    {id: "349", title: "Hãy Bước Đi Đến Khắp Cả Thế Giới!", link: "https://book.watv.org/newsong/newsong349", topic: "Truyền đạo", duration: "02:13", seconds: 133},
+    {id: "350", title: "Đức Thánh Linh Ngự Xuống Trên Chúng Ta", link: "https://book.watv.org/newsong/newsong350", topic: "Truyền đạo", duration: "02:36", seconds: 156},
+	{id: "351", title: "Hỡi Thanh Niên! Hãy Bước Ra Thế Giới!", link: "https://book.watv.org/newsong/newsong351", topic: "Truyền đạo", duration: "01:57", seconds: 117},
+    {id: "352", title: "Hãy Cứu Một Linh Hồn!", link: "https://book.watv.org/newsong/newsong352", topic: "Truyền đạo", duration: "02:33", seconds: 153},
+    {id: "353", title: "Hãy Nhìn Xem! Hãy Nghe Thấy!", link: "https://book.watv.org/newsong/newsong353", topic: "Truyền đạo", duration: "03:42", seconds: 222},
+    {id: "354", title: "Phàm Nơi Nào Bàn Chân Chúng Con Bước Đến", link: "https://book.watv.org/newsong/newsong354", topic: "Truyền đạo", duration: "02:42", seconds: 162},
+    {id: "355", title: "Năng Lực Thánh Linh Của Lễ Lều Tạm", link: "https://book.watv.org/newsong/newsong355", topic: "Truyền đạo", duration: "02:15", seconds: 135},
+    {id: "356", title: "Hỡi Người Đương Ngủ! Hãy Thức Dậy Lên!", link: "https://book.watv.org/newsong/newsong356", topic: "Truyền đạo", duration: "02:06", seconds: 126},
+    {id: "357", title: "Hướng Đến Tân Đại Lục Của Tin Lành", link: "https://book.watv.org/newsong/newsong357", topic: "Truyền đạo", duration: "01:52", seconds: 112},
+    {id: "358", title: "Hỡi Con Cái Giêrusalem!", link: "https://book.watv.org/newsong/newsong358", topic: "Truyền đạo", duration: "02:01", seconds: 121},
+    {id: "359", title: "Hỡi Người Giúp Việc Giao Ước Mới", link: "https://book.watv.org/newsong/newsong359", topic: "Truyền đạo", duration: "01:57", seconds: 117},
+    {id: "360", title: "Hỡi Các Người Sống Vĩnh Viễn", link: "https://book.watv.org/newsong/newsong360", topic: "Truyền đạo", duration: "02:01", seconds: 121},
+    {id: "361", title: "Hỡi Thanh Niên, Kẻ Canh Giữ Lẽ Thật Siôn!", link: "https://book.watv.org/newsong/newsong361", topic: "Truyền đạo", duration: "02:48", seconds: 168},
+    {id: "362", title: "Trên Vũ Đài Công Việc Vĩ Đại", link: "https://book.watv.org/newsong/newsong362", topic: "Truyền đạo", duration: "01:53", seconds: 113},
+    {id: "363", title: "Tin Lành Đầy Tràn Sự Vinh Hiển", link: "https://book.watv.org/newsong/newsong363", topic: "Truyền đạo", duration: "02:05", seconds: 125},
+    {id: "364", title: "Xin Ngài Hãy Mở Cửa Trên Trời", link: "https://book.watv.org/newsong/newsong364", topic: "Truyền đạo", duration: "01:50", seconds: 110},
+    {id: "365", title: "Bằng Tấm Lòng Đầy Tràn Vui Mừng", link: "https://book.watv.org/newsong/newsong365", topic: "Truyền đạo", duration: "02:00", seconds: 120},
+    {id: "366", title: "Này Nhìn Kìa! Tiếng Những Kẻ Canh Giữ Thổi Kèn Vang", link: "https://book.watv.org/newsong/newsong366", topic: "Truyền đạo", duration: "03:58", seconds: 238},
+    {id: "367", title: "Nếu Chẳng Có Ai Rao Giảng", link: "https://book.watv.org/newsong/newsong367", topic: "Truyền đạo", duration: "01:38", seconds: 98},
+    {id: "368", title: "Hỡi Ngươi Là Người Của Đức Chúa Trời!", link: "https://book.watv.org/newsong/newsong368", topic: "Truyền đạo", duration: "02:06", seconds: 126},
+    {id: "369", title: "Hãy Cất Tiếng! Đến Samari, Đến Đầu Cùng Đất!", link: "https://book.watv.org/newsong/newsong369", topic: "Truyền đạo", duration: "01:55", seconds: 115},
+    {id: "370", title: "Nào, Ta Hãy Bắt Tay Nắm Tay Với Nhau", link: "https://book.watv.org/newsong/newsong370", topic: "Truyền đạo", duration: "02:41", seconds: 161},
+    {id: "371", title: "Vũ Trụ Bao La Mênh Mông!", link: "https://book.watv.org/newsong/newsong371", topic: "Truyền đạo", duration: "03:03", seconds: 183},
+    {id: "372", title: "Thưa Mẹ Chúng Con! Thưa Mẹ!", link: "https://book.watv.org/newsong/newsong372", topic: "Cầu nguyện", duration: "02:28", seconds: 148},
+    {id: "373", title: "Xin Cha Hãy Lấp Đầy Lòng Con", link: "https://book.watv.org/newsong/newsong373", topic: "Cầu nguyện", duration: "02:55", seconds: 175},
+    {id: "374", title: "Vào Giờ Này Con Nguyện Cầu Khẩn Lên", link: "https://book.watv.org/newsong/newsong374", topic: "Cầu nguyện", duration: "02:26", seconds: 146},
+    {id: "375", title: "Cầu Nguyện", link: "https://book.watv.org/newsong/newsong375", topic: "Cầu nguyện", duration: "01:38", seconds: 98},
+    {id: "376", title: "Xin Hầu Cho Con Nhẫn Nhịn", link: "https://book.watv.org/newsong/newsong376", topic: "Cầu nguyện", duration: "02:04", seconds: 124},
+    {id: "377", title: "Lạy Thưa Đấng An Xang Hồng, Đức Chúa Trời Của Con Ơi!", link: "https://book.watv.org/newsong/newsong377", topic: "Cầu nguyện", duration: "02:26", seconds: 146},
+    {id: "378", title: "Con Cầu Khẩn Đức Chúa Trời Cha", link: "https://book.watv.org/newsong/newsong378", topic: "Cầu nguyện", duration: "03:12", seconds: 192},
+    {id: "379", title: "Thánh Linh Trong Tấm Lòng Cảm Động Đầy Tràn", link: "https://book.watv.org/newsong/newsong379", topic: "Cầu nguyện", duration: "02:27", seconds: 147},
+    {id: "380", title: "Lạy Đức Chúa Trời An Xang Hồng Đấng Chí Thánh", link: "https://book.watv.org/newsong/newsong380", topic: "Cầu nguyện", duration: "02:10", seconds: 130},
+    {id: "381", title: "Thưa Mẹ Ơi! Con Hết Lòng Khẩn Thiết", link: "https://book.watv.org/newsong/newsong381", topic: "Cầu nguyện", duration: "02:33", seconds: 153},
+    {id: "382", title: "Thần Lẽ Thật", link: "https://book.watv.org/newsong/newsong382", topic: "Cầu nguyện", duration: "02:31", seconds: 151},
+    {id: "383", title: "Xin Cho Con Được Nhận Biết Ân Huệ Lớn Lao Của Cha!", link: "https://book.watv.org/newsong/newsong383", topic: "Cầu nguyện", duration: "03:08", seconds: 188},
+    {id: "384", title: "Trong Tình Yêu Thương Của Mẹ", link: "https://book.watv.org/newsong/newsong384", topic: "Cầu nguyện", duration: "02:40", seconds: 160},
+    {id: "385", title: "Cầu Nguyện Của Tội Nhân", link: "https://book.watv.org/newsong/newsong385", topic: "Cầu nguyện", duration: "02:41", seconds: 161},
+    {id: "386", title: "Nguyện Xin Ngài Hãy Mau Chóng Đến!", link: "https://book.watv.org/newsong/newsong386", topic: "Cầu nguyện", duration: "04:19", seconds: 259},
+    {id: "387", title: "Xin Hầu Cho Con Nhận Biết", link: "https://book.watv.org/newsong/newsong387", topic: "Cầu nguyện", duration: "02:49", seconds: 169},
+    {id: "388", title: "Xin Hãy Cho Con Biết Hầu Việc", link: "https://book.watv.org/newsong/newsong388", topic: "Cầu nguyện", duration: "02:20", seconds: 140},
+    {id: "389", title: "Ân Sủng Chúa Trời Lấp Lánh Sáng Ngời", link: "https://book.watv.org/newsong/newsong389", topic: "Nghi thức", duration: "02:37", seconds: 157},
+    {id: "390", title: "Ngày Nghỉ Ngơi Phước Lành Vui Mừng", link: "https://book.watv.org/newsong/newsong390", topic: "Lễ trọng thể", duration: "02:25", seconds: 145},
+    {id: "391", title: "Ngài Phục Sinh Sáng Tinh Mơ", link: "https://book.watv.org/newsong/newsong391", topic: "Lễ trọng thể", duration: "02:45", seconds: 165},
+    {id: "392", title: "Thánh Thay, Thánh Thay, Thánh Thay!", link: "https://book.watv.org/newsong/newsong392", topic: "Vinh hiển", duration: "02:18", seconds: 138},
+    {id: "393", title: "Vọng Vang Tiếng Tôn Vinh", link: "https://book.watv.org/newsong/newsong393", topic: "Vinh hiển", duration: "01:51", seconds: 111},
+    {id: "394", title: "Muôn Vật Được Đấng An Xang Hồng Sáng Tạo", link: "https://book.watv.org/newsong/newsong394", topic: "Vinh hiển", duration: "02:56", seconds: 176},
+    {id: "395", title: "Ngôi Tôn Quý Cao Cả", link: "https://book.watv.org/newsong/newsong395", topic: "Vinh hiển", duration: "03:34", seconds: 214},
+    {id: "396", title: "Đức Chúa Trời! Xin Hãy Đến!", link: "https://book.watv.org/newsong/newsong396", topic: "Vinh hiển", duration: "01:51", seconds: 111},
+    {id: "397", title: "Hãy Mừng Vui Tôn Kính, Tán Dương Lên", link: "https://book.watv.org/newsong/newsong397", topic: "Vinh hiển", duration: "01:54", seconds: 114},
+    {id: "398", title: "Đích Thân Cha Luôn Luôn Dắt Dẫn Tôi", link: "https://book.watv.org/newsong/newsong398", topic: "Cảm tạ", duration: "02:46", seconds: 166},
+    {id: "399", title: "Từng Xa Lìa Khỏi Bầy Chiên", link: "https://book.watv.org/newsong/newsong399", topic: "Cảm tạ", duration: "03:24", seconds: 204},
+    {id: "400", title: "Xin Ngài Thứ Tha Tội Nhân Này!", link: "https://book.watv.org/newsong/newsong400", topic: "Cảm tạ", duration: "02:16", seconds: 136},
+	{id: "401", title: "Nơi Hội Thánh Giống Như Thành Siôn", link: "https://book.watv.org/newsong/newsong401", topic: "Đức tin", duration: "02:25", seconds: 145},
+    {id: "402", title: "Dầu Vượt Qua Núi Cao, Qua Thung Lũng Hiểm Nguy", link: "https://book.watv.org/newsong/newsong402", topic: "Đức tin", duration: "02:09", seconds: 129},
+    {id: "403", title: "Vì Linh Hồn Của Tôi Được Chiếu Sáng", link: "https://book.watv.org/newsong/newsong403", topic: "Đức tin", duration: "01:58", seconds: 118},
+    {id: "404", title: "Thật Nhân Từ Thay Đấng An Xang Hồng!", link: "https://book.watv.org/newsong/newsong404", topic: "Đức tin", duration: "02:37", seconds: 157},
+    {id: "405", title: "Dầu Ta Không Trông Thấy Chứng Cớ", link: "https://book.watv.org/newsong/newsong405", topic: "Đức tin", duration: "02:11", seconds: 131},
+    {id: "406", title: "Hỡi Siôn Là Nơi Rất Vững Mạnh", link: "https://book.watv.org/newsong/newsong406", topic: "Đức tin", duration: "02:54", seconds: 174},
+    {id: "407", title: "Để Được Tự Do Khỏi Tội Lỗi", link: "https://book.watv.org/newsong/newsong407", topic: "Đức tin", duration: "02:12", seconds: 132},
+    {id: "408", title: "Ân Huệ Thật Lớn Lao Của Đức Chúa Trời An Xang Hồng", link: "https://book.watv.org/newsong/newsong408", topic: "Đức tin", duration: "02:43", seconds: 163},
+    {id: "409", title: "Lời Cha Thật Sâu Sắc Ngọt Ngào Dường Nào", link: "https://book.watv.org/newsong/newsong409", topic: "Đức tin", duration: "03:03", seconds: 183},
+    {id: "410", title: "Cha An Xang Hồng Kêu Gọi \"Hãy Đến!\"", link: "https://book.watv.org/newsong/newsong410", topic: "Đức tin", duration: "03:35", seconds: 215},
+    {id: "411", title: "Dòng Huyết Báu Như Suối Nước Tinh Khiết", link: "https://book.watv.org/newsong/newsong411", topic: "Đức tin", duration: "03:07", seconds: 187},
+    {id: "412", title: "Nay Tôi Tin Cậy Cha An Xang Hồng", link: "https://book.watv.org/newsong/newsong412", topic: "Đức tin", duration: "02:24", seconds: 144},
+    {id: "413", title: "Nhờ Ân Huệ Lớn Cha Đã Ban Xuống", link: "https://book.watv.org/newsong/newsong413", topic: "Đức tin", duration: "03:12", seconds: 192},
+    {id: "414", title: "Hãy Bỏ Đi Hết Mọi Hồ Nghi", link: "https://book.watv.org/newsong/newsong414", topic: "Đức tin", duration: "02:49", seconds: 169},
+    {id: "415", title: "Tận Nơi Sâu Thẳm Trong Linh Hồn Tôi", link: "https://book.watv.org/newsong/newsong415", topic: "Đức tin", duration: "03:36", seconds: 216},
+    {id: "416", title: "Để Thoát Khỏi Gánh Nặng Và Ách Của Sự Đau Đớn", link: "https://book.watv.org/newsong/newsong416", topic: "Đức tin", duration: "04:20", seconds: 260},
+    {id: "417", title: "Đến Gần Ngài", link: "https://book.watv.org/newsong/newsong417", topic: "Đức tin", duration: "04:04", seconds: 244},
+    {id: "418", title: "Hỡi Đấng Nguồn Phước, Xin Giáng Lâm!", link: "https://book.watv.org/newsong/newsong418", topic: "Đức tin", duration: "02:05", seconds: 125},
+    {id: "419", title: "Dẫu Gặp Phải Hoạn Nạn, Bắt Bớ", link: "https://book.watv.org/newsong/newsong419", topic: "Đức tin", duration: "02:32", seconds: 152},
+    {id: "420", title: "Cha Chiếu Soi Đường Cho Chúng Ta Bước Đi", link: "https://book.watv.org/newsong/newsong420", topic: "Đức tin", duration: "02:15", seconds: 135},
+    {id: "421", title: "Này, Đấng An Xang Hồng Đã Đến!", link: "https://book.watv.org/newsong/newsong421", topic: "Đức tin", duration: "02:00", seconds: 120},
+    {id: "422", title: "Trên Các Lối Nẻo Đường Con Chạy Theo", link: "https://book.watv.org/newsong/newsong422", topic: "Đức tin", duration: "02:20", seconds: 140},
+    {id: "423", title: "Khi Chúng Ta Mỏi Mệt Vì Tội Lỗi Đã Phạm", link: "https://book.watv.org/newsong/newsong423", topic: "Đức tin", duration: "03:17", seconds: 197},
+    {id: "424", title: "Xin Hãy Làm Theo Ý Ngài", link: "https://book.watv.org/newsong/newsong424", topic: "Sự trông cậy", duration: "02:30", seconds: 150},
+    {id: "425", title: "Con Đường Đi Về Trên Trời Sáng Láng", link: "https://book.watv.org/newsong/newsong425", topic: "Sự trông cậy", duration: "03:07", seconds: 187},
+    {id: "426", title: "Ấy Là Sự Trông Cậy Trong Lòng Ta", link: "https://book.watv.org/newsong/newsong426", topic: "Sự trông cậy", duration: "02:01", seconds: 121},
+    {id: "427", title: "Niềm Vui Mừng Lớn Dâng Trào Trong Lòng Tôi", link: "https://book.watv.org/newsong/newsong427", topic: "Sự trông cậy", duration: "02:20", seconds: 140},
+    {id: "428", title: "Tiếng Kèn Báo Sự Giáng Lâm Vang Lên Rung Động", link: "https://book.watv.org/newsong/newsong428", topic: "Sự trông cậy", duration: "02:06", seconds: 126},
+    {id: "429", title: "Vì Kèn Hành Quân Đã Được Thổi", link: "https://book.watv.org/newsong/newsong429", topic: "Sự trông cậy", duration: "03:01", seconds: 181},
+    {id: "430", title: "Linh Hồn Tôi Nhận Lấy Ân Sủng", link: "https://book.watv.org/newsong/newsong430", topic: "Sự trông cậy", duration: "02:10", seconds: 130},
+    {id: "431", title: "Trong Vòng Tay Đức Chúa Trời Tôi Nghỉ Ngơi An Bình!", link: "https://book.watv.org/newsong/newsong431", topic: "Sự trông cậy", duration: "02:46", seconds: 166},
+    {id: "432", title: "Vì Ngài Là Niềm Vui Con", link: "https://book.watv.org/newsong/newsong432", topic: "Sự trông cậy", duration: "03:29", seconds: 209},
+    {id: "433", title: "Khi Đi Đến Thiên Đàng Tốt Đẹp Kia", link: "https://book.watv.org/newsong/newsong433", topic: "Sự trông cậy", duration: "03:01", seconds: 181},
+    {id: "434", title: "Mẹ Đã Ban Nước Sống Đầy Tràn", link: "https://book.watv.org/newsong/newsong434", topic: "Sự trông cậy", duration: "03:02", seconds: 182},
+    {id: "435", title: "Lạy Cha Yêu Dấu Đấng An Xang Hồng!", link: "https://book.watv.org/newsong/newsong435", topic: "Tình yêu thương", duration: "02:28", seconds: 148},
+    {id: "436", title: "Ngọc Thể Quý Báu Của Cha", link: "https://book.watv.org/newsong/newsong436", topic: "Tình yêu thương", duration: "02:24", seconds: 144},
+    {id: "437", title: "Ôi! Lời Cha Trên Trời Đã Ban Cho", link: "https://book.watv.org/newsong/newsong437", topic: "Tình yêu thương", duration: "02:33", seconds: 153},
+    {id: "438", title: "Tình Yêu Thương Lớn Ấy Của Đức Chúa Trời", link: "https://book.watv.org/newsong/newsong438", topic: "Tình yêu thương", duration: "02:42", seconds: 162},
+    {id: "439", title: "Vì Cớ Tội Con Cha Đã Phải Chịu Đau Đớn", link: "https://book.watv.org/newsong/newsong439", topic: "Tình yêu thương", duration: "01:41", seconds: 101},
+    {id: "440", title: "Vì Con Không Nơi Nương Tựa", link: "https://book.watv.org/newsong/newsong440", topic: "Hối cải", duration: "02:38", seconds: 158},
+    {id: "441", title: "Bởi Huyết Quý Báu Chiên Con Làm Của Lễ Chuộc Tội", link: "https://book.watv.org/newsong/newsong441", topic: "Hối cải", duration: "02:15", seconds: 135},
+    {id: "442", title: "Con Thú Nhận Hết Mọi Tội Lỗi Và Ăn Năn", link: "https://book.watv.org/newsong/newsong442", topic: "Hối cải", duration: "02:23", seconds: 143},
+    {id: "443", title: "Dầu Tội Lỗi Của Ngươi Gian Ác", link: "https://book.watv.org/newsong/newsong443", topic: "Hối cải", duration: "02:39", seconds: 159},
+    {id: "444", title: "Trước Đêm Tăm Tối Bao Phủ Quanh", link: "https://book.watv.org/newsong/newsong444", topic: "Truyền đạo", duration: "02:06", seconds: 126},
+    {id: "445", title: "Hãy Ném Dây Sự Sống Vượt Qua Dòng Nước Kia!", link: "https://book.watv.org/newsong/newsong445", topic: "Truyền đạo", duration: "02:27", seconds: 147},
+    {id: "446", title: "Hãy Đi Gieo Trồng Sáng Sớm Đến Tận Đêm!", link: "https://book.watv.org/newsong/newsong446", topic: "Truyền đạo", duration: "02:09", seconds: 129},
+    {id: "447", title: "Lúa Mì Chín Vàng Rực Đang Trải Dài", link: "https://book.watv.org/newsong/newsong447", topic: "Truyền đạo", duration: "03:23", seconds: 203},
+    {id: "448", title: "Tin Tức Rất Vui Mừng Này", link: "https://book.watv.org/newsong/newsong448", topic: "Truyền đạo", duration: "03:05", seconds: 185},
+    {id: "449", title: "Thiết Tha Êm Dịu Giọng Tiếng Cha Đang Gọi", link: "https://book.watv.org/newsong/newsong449", topic: "Truyền đạo", duration: "03:20", seconds: 200},
+    {id: "450", title: "Hãy Trở Về! Hãy Trở Về!", link: "https://book.watv.org/newsong/newsong450", topic: "Truyền đạo", duration: "03:19", seconds: 199},
+	{id: "451", title: "Bởi Huyết Báu Giao Ước Mới Lễ Vượt Qua", link: "https://book.watv.org/newsong/newsong451", topic: "Truyền đạo", duration: "02:00", seconds: 120},
+    {id: "452", title: "Thời Gian Con Dâng Cầu Nguyện Lên Cha", link: "https://book.watv.org/newsong/newsong452", topic: "Cầu nguyện", duration: "03:24", seconds: 204},
+    {id: "453", title: "Nay Con Xin Hướng Đến Nước Thiên Đàng", link: "https://book.watv.org/newsong/newsong453", topic: "Cầu nguyện", duration: "02:23", seconds: 143},
+    {id: "454", title: "Thử Thách Hiểm Nguy Trong Dòng Nước", link: "https://book.watv.org/newsong/newsong454", topic: "Cầu nguyện", duration: "02:25", seconds: 145},
+    {id: "455", title: "Hỡi Cha Đầy Dẫy Nhân Từ!", link: "https://book.watv.org/newsong/newsong455", topic: "Cầu nguyện", duration: "02:25", seconds: 145},
+    {id: "456", title: "Vì Ngày Trước Con Đi Xa Ngài", link: "https://book.watv.org/newsong/newsong456", topic: "Cầu nguyện", duration: "02:07", seconds: 127},
+    {id: "457", title: "Dầu Cho Thế Gian Nguy Hiểm", link: "https://book.watv.org/newsong/newsong457", topic: "Cầu nguyện", duration: "02:32", seconds: 152},
+    {id: "458", title: "Hỡi Thánh Linh, Xin Ngài Ngự Trên Con!", link: "https://book.watv.org/newsong/newsong458", topic: "Cầu nguyện", duration: "04:26", seconds: 266},
+    {id: "459", title: "Nhiều Sự Lo Lắng, Thử Thách, Khó Khăn", link: "https://book.watv.org/newsong/newsong459", topic: "Cầu nguyện", duration: "02:24", seconds: 144},
+    {id: "460", title: "Huyết Quý Báu Chiên Con", link: "https://book.watv.org/newsong/newsong460", topic: "Cầu nguyện", duration: "03:38", seconds: 218},
+    {id: "461", title: "Như Rơm Khô Trên Cánh Đồng Vắng Lặng", link: "https://book.watv.org/newsong/newsong461", topic: "Cầu nguyện", duration: "03:07", seconds: 187},
+    {id: "462", title: "Vầng Đá Muôn Đời", link: "https://book.watv.org/newsong/newsong462", topic: "Nghi thức", duration: "02:06", seconds: 126},
+    {id: "463", title: "Ở Trên Thế Gian Này Luôn Đầy Dẫy Sự Lo Phiền", link: "https://book.watv.org/newsong/newsong463", topic: "Nghi thức", duration: "03:13", seconds: 193},
+    {id: "464", title: "Thân Thể Đang Đi Con Đường Nhân Sinh Khổ Đau", link: "https://book.watv.org/newsong/newsong464", topic: "Nghi thức", duration: "01:56", seconds: 116},
+    {id: "465", title: "Khi Hết Thảy Lao Khổ Thế Gian Qua Đi", link: "https://book.watv.org/newsong/newsong465", topic: "Nghi thức", duration: "02:45", seconds: 165},
+    {id: "466", title: "Nhìn Thấy Nước Thiên Đàng Kia", link: "https://book.watv.org/newsong/newsong466", topic: "Nghi thức", duration: "02:29", seconds: 149},
+    {id: "467", title: "Sau Mọi Sự Vất Vả Cùng Khó Nhọc Qua Đi", link: "https://book.watv.org/newsong/newsong467", topic: "Nghi thức", duration: "02:37", seconds: 157},
+    {id: "468", title: "Trong Vầng Đá Muôn Đời Được Mở Ra", link: "https://book.watv.org/newsong/newsong468", topic: "Nghi thức", duration: "02:07", seconds: 127},
+    {id: "469", title: "Nơi Thiên Quốc Kia Sáng Láng Hơn Mặt Trời", link: "https://book.watv.org/newsong/newsong469", topic: "Nghi thức", duration: "03:08", seconds: 188},
+    {id: "470", title: "Đến Tận Khi Ta Gặp Lại Trên Trời", link: "https://book.watv.org/newsong/newsong470", topic: "Nghi thức", duration: "03:10", seconds: 190},
+    {id: "471", title: "Đấng Ban Cứu Rỗi", link: "https://book.watv.org/newsong/newsong471", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "472", title: "Tâm Linh Tha Thiết Cầu Nguyện", link: "https://book.watv.org/newsong/newsong472", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "473", title: "Lạy Thưa Cha An Xang Hồng Ngự Ở Trên Trời!", link: "https://book.watv.org/newsong/newsong473", topic: "Ngẫm nghĩ", duration: "01:19", seconds: 79},
+    {id: "474", title: "Thánh Thay! Thánh Thay!", link: "https://book.watv.org/newsong/newsong474", topic: "Ngẫm nghĩ", duration: "01:28", seconds: 88},
+    {id: "475", title: "Vua Của Muôn Vua", link: "https://book.watv.org/newsong/newsong475", topic: "Ngẫm nghĩ", duration: "01:17", seconds: 77},
+    {id: "476", title: "Tình Yêu Thương Ba Mươi Bảy Năm", link: "https://book.watv.org/newsong/newsong476", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "477", title: "Con Xin Chắp Đôi Tay Lại", link: "https://book.watv.org/newsong/newsong477", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "478", title: "Thiên Thượng Trên Trời Đẹp Đẽ Kia!", link: "https://book.watv.org/newsong/newsong478", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "479", title: "Xin Ngài Hãy Làm Mới Lại Linh Hồn Con!", link: "https://book.watv.org/newsong/newsong479", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "480", title: "Vinh Hiển! Vinh Hiển!", link: "https://book.watv.org/newsong/newsong480", topic: "Ngẫm nghĩ", duration: "01:27", seconds: 87},
+    {id: "481", title: "Hãy Tôn Vinh Lên Đấng An Xang Hồng", link: "https://book.watv.org/newsong/newsong481", topic: "Ngẫm nghĩ", duration: "01:47", seconds: 107},
+    {id: "482", title: "Lấy Hết Lòng, Hết Linh Hồn", link: "https://book.watv.org/newsong/newsong482", topic: "Ngẫm nghĩ", duration: "01:17", seconds: 77},
+    {id: "483", title: "Đức Chúa Trời Êlôhim", link: "https://book.watv.org/newsong/newsong483", topic: "Ngẫm nghĩ", duration: "01:17", seconds: 77},
+    {id: "484", title: "Kính Lạy, Tán Dương Lên Đấng Chí Thánh", link: "https://book.watv.org/newsong/newsong484", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
+    {id: "485", title: "Giêrusalem Từ Trên Trời Ngự Xuống", link: "https://book.watv.org/newsong/newsong485", topic: "Ngẫm nghĩ", duration: "01:19", seconds: 79}
+];
+
+const FIXED_TOPICS = [
+    'Vinh hiển',
+    'Cảm tạ',
+    'Đức tin',
+    'Sự trông cậy',
+    'Tình yêu thương',
+    'Hy sinh',
+    'Hối cải',
+    'Truyền đạo',
+    'Nghi thức',
+    'Ngẫm nghĩ'
+];
+
+const colorClasses = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5'];
+
+// Favorite songs management class
+class FavoriteSongs {
+    constructor() {
+        this.favorites = new Set(this.loadFavorites());
+        this.updateFavoritesDisplay();
+    }
+
+    loadFavorites() {
+        const saved = localStorage.getItem('favoriteSongs');
+        return saved ? JSON.parse(saved) : [];
+    }
+
+    saveFavorites() {
+        localStorage.setItem('favoriteSongs', JSON.stringify([...this.favorites]));
+        this.updateFavoritesDisplay();
+    }
+
+    toggleFavorite(songId) {
+        if (this.favorites.has(songId)) {
+            this.favorites.delete(songId);
+        } else {
+            this.favorites.add(songId);
+        }
+        this.saveFavorites();
+        this.updateHeartButton(songId);
+    }
+
+    removeFavorite(songId) {
+        this.favorites.delete(songId);
+        this.saveFavorites();
+        this.updateHeartButton(songId);
+    }
+
+    updateHeartButton(songId) {
+        const buttons = document.querySelectorAll(`.heart-btn[data-id="${songId}"]`);
+        const isFav = this.favorites.has(songId);
+        buttons.forEach(button => {
+            button.classList.toggle('active', isFav);
+            button.innerHTML = isFav ? '❤️' : '🤍';
+            button.title = isFav ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích';
+        });
+    }
+
+    updateFavoritesDisplay() {
+        const favoritesContainer = document.getElementById('favorites-list');
+        const favCount = document.querySelector('.favorites-count');
+        favCount.textContent = this.favorites.size;
+
+        if (this.favorites.size === 0) {
+            favoritesContainer.innerHTML = `
+                <div class="no-favorites">
+                    Chưa có Bài Ca Mới yêu thích nào. 
+                    Nhấn vào biểu tượng ❤️ để thêm Bài Ca Mới vào danh sách yêu thích.
+                </div>
+            `;
+            return;
+        }
+
+        const favoritesList = [...this.favorites].map(id => {
+            const song = songs.find(s => s.id === id);
+            if (!song) return '';
+            return `
+                <div class="favorite-item">
+                    <div class="favorite-info">
+                        <span class="song-number">#${song.id}</span>
+                        <a href="${song.link}" target="_blank">${song.title}</a>
+                        (${song.duration})
+                    </div>
+                    <div class="favorite-actions">
+                        <button class="remove-btn" 
+                            onclick="favoriteSongs.removeFavorite('${song.id}')" 
+                            title="Xóa khỏi danh sách yêu thích">
+                            ×
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        favoritesContainer.innerHTML = favoritesList;
+    }
+
+    isFavorite(songId) {
+        return this.favorites.has(songId);
+    }
+}
+
+// Initialize favorites
+const favoriteSongs = new FavoriteSongs();
+
+// Utility functions
+function getRandomItem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getMultipleRandomItems(arr, count) {
+    // Create weighted array with favorites appearing twice
+    const weightedArr = arr.reduce((acc, item) => {
+        acc.push(item);
+        if (favoriteSongs.isFavorite(item.id)) {
+            acc.push(item); // Add favorite items twice
+        }
+        return acc;
+    }, []);
+
+    // Shuffle and select items
+    const shuffled = weightedArr.sort(() => 0.5 - Math.random());
+    const selected = [];
+    const selectedIds = new Set();
+
+    // Select unique items
+    for (let item of shuffled) {
+        if (selected.length >= count) break;
+        if (!selectedIds.has(item.id)) {
+            selected.push(item);
+            selectedIds.add(item.id);
+        }
+    }
+
+    return selected;
+}
+
+function secondsToTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Display functions
+function displaySongs(selectedSongs, message = "") {
+    const totalSeconds = selectedSongs.reduce((acc, song) => acc + song.seconds, 0);
+    document.getElementById('total-time').textContent = 
+        `Tổng Thời Gian: ${secondsToTime(totalSeconds)} ${message}`;
+
+    const resultHtml = `
+        <div class="result-title">Các Bài Ca Mới Được Chọn</div>
+        ${selectedSongs.map(song => `
+            <div class="selected-song">
+                <div>
+                    <span class="song-number">#${song.id}</span>
+                    <a href="${song.link}" target="_blank">${song.title}</a>
+                    (${song.duration})
+                    <button class="heart-btn ${favoriteSongs.isFavorite(song.id) ? 'active' : ''}" 
+                        onclick="favoriteSongs.toggleFavorite('${song.id}')"
+                        data-id="${song.id}"
+                        title="${favoriteSongs.isFavorite(song.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}">
+                        ${favoriteSongs.isFavorite(song.id) ? '❤️' : '🤍'}
+                    </button>
+                </div>
+                <div class="song-topic">${song.topic}</div>
+            </div>
+        `).join('')}
+    `;
+
+    document.getElementById('result').innerHTML = resultHtml;
+}
+
+function displayFullSongList() {
+    const songListDiv = document.getElementById('full-song-list');
+    
+    const songsHtml = songs.map(song => `
+        <div class="song-item">
+            <div class="song-id">#${song.id}</div>
+            <div class="song-title">
+                <a href="${song.link}" target="_blank">${song.title}</a>
+                <button class="heart-btn ${favoriteSongs.isFavorite(song.id) ? 'active' : ''}" 
+                    onclick="favoriteSongs.toggleFavorite('${song.id}')"
+                    data-id="${song.id}"
+                    title="${favoriteSongs.isFavorite(song.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}">
+                    ${favoriteSongs.isFavorite(song.id) ? '❤️' : '🤍'}
+                </button>
+            </div>
+            <div class="song-duration">${song.duration}</div>
+            <div class="song-topic">${song.topic}</div>
+        </div>
+    `).join('');
+    
+    songListDiv.innerHTML = songsHtml;
+}
+
+// Selection functions
+function generateTopicButtons() {
+    const container = document.getElementById('topic-buttons');
+    container.innerHTML = FIXED_TOPICS.map((topic, index) => `
+        <button 
+            class="topic-btn ${colorClasses[index % colorClasses.length]}" 
+            onclick="generateTopicSongs('${topic}')"
+        >
+            ${topic}
+        </button>
+    `).join('');
+}
+
+function generateRandomSelection(targetMin, targetMax) {
+    const selectedSongs = getRandomCombination(songs, targetMin, targetMax, 3);
+    
+    if (!selectedSongs) {
+        document.getElementById('result').innerHTML = 
+            '<div class="warning">Không tìm thấy tổ hợp phù hợp. Vui lòng thử lại.</div>';
+    } else {
+        displaySongs(selectedSongs, `(${selectedSongs.length} bài)`);
+    }
+    scrollToResults();
+}
+
+function getRandomCombination(songList, targetMin, targetMax, preferredSize) {
+    let attempts = 0;
+    const maxAttempts = 1000;
+    const size = Math.random() < 0.75 ? preferredSize : preferredSize + 1;
+    
+    while (attempts < maxAttempts) {
+        const selectedSongs = getMultipleRandomItems(songList, size);
+        const totalTime = selectedSongs.reduce((acc, song) => acc + song.seconds, 0);
+        
+        if (totalTime >= targetMin && totalTime <= targetMax) {
+            return selectedSongs;
+        }
+        attempts++;
+    }
+    return null;
+}
+
+function generateTopicSongs(topic) {
+    const topicSongs = songs.filter(song => song.topic === topic);
+    if (topicSongs.length < 3) {
+        document.getElementById('result').innerHTML = 
+            `<div class="warning">Không đủ Bài Ca Mới cho chủ đề "${topic}".</div>`;
+    } else {
+        const selected = getMultipleRandomItems(topicSongs, 3);
+        displaySongs(selected, `(Chủ đề: ${topic})`);
+    }
+    scrollToResults();
+}
+function generateShortSongs() {
+    const shortSongs = songs.filter(song => song.seconds < 105);
+    if (shortSongs.length < 3) {
+        document.getElementById('result').innerHTML = 
+            '<div class="warning">Không đủ Bài Ca Mới dưới 1:45.</div>';
+    } else {
+        const selected = getMultipleRandomItems(shortSongs, 3);
+        displaySongs(selected, "(Bài ngắn)");
+    }
+    scrollToResults();
+}
+function generateTwoMinuteSongs() {
+    const twoMinSongs = songs.filter(song => 
+        song.seconds >= 105 && song.seconds <= 134
+    );
+    if (twoMinSongs.length < 3) {
+        document.getElementById('result').innerHTML = 
+            '<div class="warning">Không đủ Bài Ca Mới từ 1:45 đến 2:14.</div>';
+    } else {
+        const selected = getMultipleRandomItems(twoMinSongs, 3);
+        displaySongs(selected, "(Bài 2 phút)");
+    }
+    scrollToResults();
+}
+
+// Modify generateMediumSongs
+function generateMediumSongs() {
+    const mediumSongs = songs.filter(song => 
+        song.seconds >= 135 && song.seconds <= 164
+    );
+    if (mediumSongs.length < 3) {
+        document.getElementById('result').innerHTML = 
+            '<div class="warning">Không đủ Bài Ca Mới từ 2:15 đến 2:44.</div>';
+    } else {
+        const selected = getMultipleRandomItems(mediumSongs, 3);
+        displaySongs(selected, "(Bài 2:30)");
+    }
+    scrollToResults();
+}
+
+// Modify generateLongSongs
+function generateLongSongs() {
+    const longSongs = songs.filter(song => 
+        song.seconds >= 165 && song.seconds <= 210
+    );
+    if (longSongs.length < 3) {
+        document.getElementById('result').innerHTML = 
+            '<div class="warning">Không đủ Bài Ca Mới từ 2:45 đến 3:30.</div>';
+    } else {
+        const selected = getMultipleRandomItems(longSongs, 3);
+        displaySongs(selected, "(Bài 3 phút)");
+    }
+    scrollToResults();
+}
+
+// Modify generateVeryLongSongs
+function generateVeryLongSongs() {
+    const veryLongSongs = songs.filter(song => song.seconds > 210);
+    if (veryLongSongs.length < 3) {
+        document.getElementById('result').innerHTML = 
+            '<div class="warning">Không đủ Bài Ca Mới trên 3:30.</div>';
+    } else {
+        const selected = getMultipleRandomItems(veryLongSongs, 3);
+        displaySongs(selected, "(Bài 4 phút)");
+    }
+    scrollToResults();
+}
+
+// Initialize the application
+generateTopicButtons();
+displayFullSongList();
+
+function scrollToResults() {
+    const resultsSection = document.querySelector('.results-section');
+    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+// Add to your favorite button handlers
+let touchStartTime;
+
+element.addEventListener('touchstart', (e) => {
+    touchStartTime = Date.now();
+});
+
+element.addEventListener('touchend', (e) => {
+    const touchDuration = Date.now() - touchStartTime;
+    if (touchDuration < 500) { // Short tap
+        // Your click handler code here
+    }
+});
+// Add this to your existing JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    
+    // Show/hide button based on scroll position
+    function toggleScrollButton() {
+        if (window.scrollY > 200) {
+            scrollToTopBtn.classList.add('visible');
+        } else {
+            scrollToTopBtn.classList.remove('visible');
+        }
+    }
+
+    // Smooth scroll to top
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    // Add event listeners
+    window.addEventListener('scroll', toggleScrollButton);
+    scrollToTopBtn.addEventListener('click', scrollToTop);
+
+    // Optional: Hide button on initial load
+    toggleScrollButton();
+});
+</script>
+</body>
+</html>
