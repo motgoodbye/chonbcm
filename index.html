@@ -4,72 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chọn Bài Ca Mới</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="page-title">Ace đăng nhập <a href="https://book.watv.org/" target="_blank">book</a>, sau đó bấm vào nút để chọn BCM nhé</h1>
-        
-        <!-- Random Selection Column -->
-        <div class="selection-column">
-            <h2 class="column-title">Chọn 3-4 bài</h2>
-            <div class="time-buttons">
-                <button onclick="generateRandomSelection(480, 494)" class="btn color-1">Chọn (8:00-8:14)</button>
-                <button onclick="generateRandomSelection(495, 510)" class="btn color-2">Chọn (8:15-8:30)</button>
-                <button onclick="generateRandomSelection(511, 525)" class="btn color-3">Chọn (8:31-8:45)</button>
-                <button onclick="generateRandomSelection(526, 540)" class="btn color-4">Chọn (8:46-9:00)</button>
+    <div class="app-container">
+        <!-- Header Area -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                <h1>Chọn Bài Ca Mới</h1>
+            </div>
+            <p class="header-instruction">Ace hãy đăng nhập <a href="https://book.watv.org/" target="_blank">Book</a> trước khi chọn bài nhé!</p>
+        </header>
+
+        <!-- User Guide -->
+        <div class="user-guide">
+            <button class="collapsible-guide"><i class="fas fa-question-circle"></i> Hướng dẫn sử dụng</button>
+            <div class="guide-content">
+                <h3>Hướng dẫn sử dụng Chọn Bài Ca Mới</h3>
+                <ol>
+                    <li><strong>Chọn bài theo giờ:</strong> Anh chị em có thể chọn tự động 3-4 bài hát phù hợp với khoảng thời gian cụ thể nhé!</li>
+                    <li><strong>Chọn theo thời lượng:</strong> Tùy theo nhu cầu, anh chị em có thể chọn bài hát dựa trên thời lượng ngắn, trung bình hoặc dài nhé!</li>
+                    <li><strong>Chọn theo chủ đề:</strong> Chọn bài hát theo các chủ đề như Vinh hiển, Cảm tạ, Đức tin chắc chắn sẽ phù hợp với tâm trạng của anh chị em nhé!</li>
+                    <li id="favorite-feature"><strong>Yêu thích:</strong> Anh chị em hãy bấm vào biểu tượng trái tim để lưu các bài hát yêu thích nhé. Lưu ý: Các bài hát được đánh dấu yêu thích sẽ có xác suất cao hơn gấp 3 lần để được chọn trong quá trình chọn ngẫu nhiên. Các bài Phụ lục (PL1-PL5) có xác suất cao hơn gấp 7 lần.</li>
+                    <li><strong>Kết quả:</strong> Kết quả sẽ hiển thị ở phần dưới với số bài hát, thời lượng tổng cộng và danh sách các bài nhé!</li>
+                </ol>
+                <p><strong>Lưu ý:</strong> Anh chị em hãy nhấp vào tiêu đề bài hát để mở liên kết tới trang Book của bài hát tương ứng nhé!</p>
             </div>
         </div>
-        
-        <!-- Duration Selection Column -->
-        <div class="selection-column">
-            <h2 class="column-title">Chọn theo thời gian</h2>
-            <div class="duration-buttons">
-                <button onclick="generateShortSongs()" class="btn color-2">Bài ngắn (0:01-1:45)</button>
-                <button onclick="generateTwoMinuteSongs()" class="btn color-3">Bài 2 phút (1:45-2:14)</button>
-                <button onclick="generateTimeRangeSongs(135, 165)" class="btn color-4">Bài 2.5p (2:15-2:45)</button>
-                <button onclick="generateTimeRangeSongs(165, 210)" class="btn color-5">Bài 3 phút (2:45-3:30)</button>
-                <button onclick="generateTimeRangeSongs(210, 330)" class="btn color-1">Bài 4 phút+ (3:30+)</button>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Selection Tabs -->
+            <div class="selection-tabs">
+                <button class="tab-button active" data-tab="time">Chọn theo giờ</button>
+                <button class="tab-button" data-tab="duration">Thời lượng</button>
+                <button class="tab-button" data-tab="topic">Chủ đề</button>
             </div>
-        </div>
-        
-        <!-- Topic Selection Column -->
-        <div class="selection-column">
-            <h2 class="column-title">Chọn theo chủ đề</h2>
-            <div class="topic-buttons">
-                <button onclick="generateTopicSongs('Vinh hiển')" class="topic-btn" style="background-color: #3498db;">Vinh hiển</button>
-                <button onclick="generateTopicSongs('Cảm tạ')" class="topic-btn" style="background-color: #2ecc71;">Cảm tạ</button>
-                <button onclick="generateTopicSongs('Đức tin')" class="topic-btn" style="background-color: #9b59b6;">Đức tin</button>
-                <button onclick="generateTopicSongs('Sự trông cậy')" class="topic-btn" style="background-color: #f1c40f;">Sự trông cậy</button>
-                <button onclick="generateTopicSongs('Tình yêu thương')" class="topic-btn" style="background-color: #e74c3c;">Tình yêu thương</button>
-                <button onclick="generateTopicSongs('Hội lớn')" class="topic-btn" style="background-color: #1abc9c;">Hội lớn</button>
-                <button onclick="generateTopicSongs('Truyền đạo')" class="topic-btn" style="background-color: #34495e;">Truyền đạo</button>
-                <button onclick="generateTopicSongs('Ngày nghỉ')" class="topic-btn" style="background-color: #e67e22;">Ngày nghỉ</button>
+
+            <!-- Selection Panels -->
+            <div class="selection-panels">
+                <!-- Time Selection Panel -->
+                <div class="selection-panel active" id="time-panel">
+                    <div class="panel-header">
+                        <h2><i class="far fa-clock"></i> Chọn 3-4 bài theo giờ</h2>
+                    </div>
+                    <div class="time-buttons">
+                        <button onclick="generateRandomSelection(480, 494)" class="selection-btn primary-btn">
+                            <i class="far fa-clock"></i>
+                            <span>8:00 - 8:14</span>
+                        </button>
+                        <button onclick="generateRandomSelection(495, 510)" class="selection-btn secondary-btn">
+                            <i class="far fa-clock"></i>
+                            <span>8:15 - 8:30</span>
+                        </button>
+                        <button onclick="generateRandomSelection(511, 525)" class="selection-btn accent-btn">
+                            <i class="far fa-clock"></i>
+                            <span>8:31 - 8:45</span>
+                        </button>
+                        <button onclick="generateRandomSelection(526, 540)" class="selection-btn neutral-btn">
+                            <i class="far fa-clock"></i>
+                            <span>8:46 - 9:00</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Duration Selection Panel -->
+                <div class="selection-panel" id="duration-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-hourglass-half"></i> Chọn theo thời lượng</h2>
+                    </div>
+                    <div class="duration-buttons">
+                        <button onclick="generateShortSongs()" class="selection-btn primary-btn">
+                            <i class="fas fa-bolt"></i>
+                            <span>Bài ngắn (0:01-1:45)</span>
+                        </button>
+                        <button onclick="generateTwoMinuteSongs()" class="selection-btn secondary-btn">
+                            <i class="fas fa-stopwatch"></i>
+                            <span>Bài 2 phút (1:45-2:14)</span>
+                        </button>
+                        <button onclick="generateTimeRangeSongs(135, 165)" class="selection-btn accent-btn">
+                            <i class="fas fa-stopwatch"></i>
+                            <span>Bài 2.5 phút (2:15-2:45)</span>
+                        </button>
+                        <button onclick="generateTimeRangeSongs(165, 210)" class="selection-btn neutral-btn">
+                            <i class="fas fa-stopwatch"></i>
+                            <span>Bài 3 phút (2:45-3:30)</span>
+                        </button>
+                        <button onclick="generateTimeRangeSongs(210, 330)" class="selection-btn success-btn">
+                            <i class="fas fa-hourglass-end"></i>
+                            <span>Bài 4 phút+ (3:30+)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Topic Selection Panel -->
+                <div class="selection-panel" id="topic-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-tags"></i> Chọn theo chủ đề</h2>
+                    </div>
+                    <div class="topic-grid">
+                        <button onclick="generateTopicSongs('Vinh hiển')" class="topic-btn">
+                            <i class="fas fa-crown"></i>
+                            <span>Vinh hiển</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Cảm tạ')" class="topic-btn">
+                            <i class="fas fa-pray"></i>
+                            <span>Cảm tạ</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Đức tin')" class="topic-btn">
+                            <i class="fas fa-book-open"></i>
+                            <span>Đức tin</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Sự trông cậy')" class="topic-btn">
+                            <i class="fas fa-pray"></i>
+                            <span>Sự trông cậy</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Tình yêu thương')" class="topic-btn">
+                            <i class="fas fa-heart"></i>
+                            <span>Tình yêu thương</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Hy sinh')" class="topic-btn">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <span>Hy sinh</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Hối cải')" class="topic-btn">
+                            <i class="fas fa-undo-alt"></i>
+                            <span>Hối cải</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Truyền đạo')" class="topic-btn">
+                            <i class="fas fa-hands-helping"></i>
+                            <span>Truyền đạo</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Nghi thức')" class="topic-btn">
+                            <i class="fas fa-scroll"></i>
+                            <span>Nghi thức</span>
+                        </button>
+                        <button onclick="generateTopicSongs('Ngẫm nghĩ')" class="topic-btn">
+                            <i class="fas fa-praying-hands"></i>
+                            <span>Ngẫm nghĩ</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <!-- Results Section -->
-        <div id="results-section" class="results-section" style="display: none;">
-            <div id="results-list"></div>
-            <div id="total-time"></div>
-            <button id="show-full-list-btn" class="btn color-1" style="margin-top: 20px;">Xem danh sách đầy đủ</button>
-            <div id="full-song-list-container" style="display: none;">
-                <div class="full-song-list" id="full-song-list"></div>
+
+            <!-- Results Section -->
+            <div id="results-section" class="results-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-list-ul"></i> Bài Ca Mới Được Chọn</h2>
+                    <div id="total-time" class="total-time-badge"></div>
+                </div>
+                <div id="results-list" class="results-list"></div>
+                
+                <button id="show-full-list-btn" class="action-btn">
+                    <i class="fas fa-th-list"></i> Xem danh sách đầy đủ
+                </button>
+                
+                <div id="full-song-list-container" class="full-list-container" style="display: none;">
+                    <div class="full-list-header">
+                        <h3>Tất cả Bài Ca Mới</h3>
+                        <button class="close-btn" id="close-full-list">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="full-song-list" id="full-song-list"></div>
+                </div>
             </div>
-        </div>
-        
+        </main>
+
         <!-- Favorites Section -->
-        <div class="favorites-section">
-            <div class="favorites-title">
-                <h2>Bài Ca Mới yêu thích</h2>
+        <section class="favorites-section">
+            <div class="section-header">
+                <h2><i class="fas fa-heart"></i> Bài Ca Mới yêu thích</h2>
                 <div class="favorites-count">0</div>
             </div>
-            <div id="favorites-list"></div>
-        </div>
+            <div id="favorites-list" class="favorites-list"></div>
+        </section>
     </div>
     
     <!-- Scroll to top -->
-    <div id="scroll-to-top" class="scroll-to-top" title="Lên đầu trang">↑</div>
+    <button id="scroll-to-top" class="scroll-to-top" title="Lên đầu trang">
+        <i class="fas fa-arrow-up"></i>
+    </button>
     
     <!-- Include JavaScript -->
     <script src="js/songs.js"></script>

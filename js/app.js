@@ -38,7 +38,7 @@ class FavoriteSongs {
         const isFav = this.favorites.has(songId);
         buttons.forEach(button => {
             button.classList.toggle('active', isFav);
-            button.innerHTML = isFav ? '❤️' : '🤍';
+            button.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart"></i>`;
             button.title = isFav ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích';
         });
     }
@@ -51,8 +51,9 @@ class FavoriteSongs {
         if (this.favorites.size === 0) {
             favoritesContainer.innerHTML = `
                 <div class="no-favorites">
+                    <i class="far fa-heart"></i>
                     Chưa có Bài Ca Mới yêu thích nào. 
-                    Nhấn vào biểu tượng ❤️ để thêm Bài Ca Mới vào danh sách yêu thích.
+                    Nhấn vào biểu tượng trái tim để thêm Bài Ca Mới vào danh sách yêu thích.
                 </div>
             `;
             return;
@@ -66,15 +67,13 @@ class FavoriteSongs {
                     <div class="favorite-info">
                         <span class="song-number">#${song.id}</span>
                         <a href="${song.link}" target="_blank">${song.title}</a>
-                        (${song.duration})
+                        <span class="song-duration">${song.duration}</span>
                     </div>
-                    <div class="favorite-actions">
-                        <button class="remove-btn" 
-                            onclick="favoriteSongs.removeFavorite('${song.id}')" 
-                            title="Xóa khỏi danh sách yêu thích">
-                            ×
-                        </button>
-                    </div>
+                    <button class="remove-btn" 
+                        onclick="favoriteSongs.removeFavorite('${song.id}')" 
+                        title="Xóa khỏi danh sách yêu thích">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             `;
         }).join('');
@@ -92,19 +91,46 @@ let favoriteSongs;
 document.addEventListener('DOMContentLoaded', () => {
     favoriteSongs = new FavoriteSongs();
     window.favoriteSongs = favoriteSongs; // Make it globally accessible for button clicks
+
+    // User guide collapsible
+    const collapsibleGuide = document.querySelector('.collapsible-guide');
+    const guideContent = document.querySelector('.guide-content');
+    
+    if(collapsibleGuide && guideContent) {
+        collapsibleGuide.addEventListener('click', function() {
+            guideContent.classList.toggle('active');
+        });
+    }
+    
 });
+
 
 // Utility functions
 function getRandomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// Array of appx song IDs
+const appxSongIds = ['PL1', 'PL2', 'PL3', 'PL4', 'PL5'];
+
 function getMultipleRandomItems(arr, count) {
-    // Create weighted array with favorites appearing twice
+    // Create weighted array with different weights for different song types
     const weightedArr = arr.reduce((acc, item) => {
-        acc.push(item);
-        if (favoriteSongs.isFavorite(item.id)) {
-            acc.push(item); // Add favorite items twice
+        acc.push(item); // Add the item once (all songs appear at least once)
+        
+        // Check if it's an appx song (7x chance)
+        if (appxSongIds.includes(item.id)) {
+            // Add appx items 6 more times (7 times total)
+            for (let i = 0; i < 6; i++) {
+                acc.push(item);
+            }
+        }
+        // Check if it's a favorite song (3x chance)
+        else if (favoriteSongs.isFavorite(item.id)) {
+            // Add favorite items 2 more times (3 times total)
+            for (let i = 0; i < 2; i++) {
+                acc.push(item);
+            }
         }
         return acc;
     }, []);
@@ -138,27 +164,23 @@ function displaySongs(selectedSongs, message = "") {
     resultsSection.style.display = 'block';
     
     const totalSeconds = selectedSongs.reduce((acc, song) => acc + song.seconds, 0);
-    document.getElementById('total-time').textContent = 
-        `Tổng Thời Gian: ${secondsToTime(totalSeconds)}`;
+    document.getElementById('total-time').textContent = `${secondsToTime(totalSeconds)}`;
 
-    const resultHtml = `
-        <div class="result-title">Các Bài Ca Mới Được Chọn</div>
-        ${selectedSongs.map(song => `
-            <div class="selected-song">
-                <div>
-                    <span class="song-number">#${song.id}</span>
-                    <a href="${song.link}" target="_blank">${song.title}</a>
-                    (${song.duration})
-                    <button class="heart-btn ${favoriteSongs.isFavorite(song.id) ? 'active' : ''}" 
-                        onclick="favoriteSongs.toggleFavorite('${song.id}')"
-                        data-id="${song.id}"
-                        title="${favoriteSongs.isFavorite(song.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}">
-                        ${favoriteSongs.isFavorite(song.id) ? '❤️' : '🤍'}
-                    </button>
-                </div>
+    const resultHtml = selectedSongs.map(song => `
+        <div class="selected-song">
+            <div>
+                <span class="song-number">#${song.id}</span>
+                <a href="${song.link}" target="_blank">${song.title}</a>
+                <span class="song-duration">${song.duration}</span>
             </div>
-        `).join('')}
-    `;
+            <button class="heart-btn ${favoriteSongs.isFavorite(song.id) ? 'active' : ''}" 
+                onclick="favoriteSongs.toggleFavorite('${song.id}')"
+                data-id="${song.id}"
+                title="${favoriteSongs.isFavorite(song.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}">
+                <i class="${favoriteSongs.isFavorite(song.id) ? 'fas' : 'far'} fa-heart"></i>
+            </button>
+        </div>
+    `).join('');
 
     document.getElementById('results-list').innerHTML = resultHtml;
     
@@ -173,30 +195,28 @@ function displayFullSongList() {
     fullListBtn.addEventListener('click', function() {
         if (fullListContainer.style.display === 'none' || !fullListContainer.style.display) {
             fullListContainer.style.display = 'block';
-            fullListBtn.textContent = 'Ẩn danh sách đầy đủ';
+            fullListBtn.innerHTML = '<i class="fas fa-times"></i> Ẩn danh sách đầy đủ';
             
             const songsHtml = songs.map(song => `
                 <div class="song-item">
                     <div>
                         <span class="song-number">#${song.id}</span>
                         <a href="${song.link}" target="_blank">${song.title}</a>
-                        (${song.duration})
+                        <span class="song-duration">${song.duration}</span>
                     </div>
-                    <div>
-                        <button class="heart-btn ${favoriteSongs.isFavorite(song.id) ? 'active' : ''}" 
-                            onclick="favoriteSongs.toggleFavorite('${song.id}')"
-                            data-id="${song.id}"
-                            title="${favoriteSongs.isFavorite(song.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}">
-                            ${favoriteSongs.isFavorite(song.id) ? '❤️' : '🤍'}
-                        </button>
-                    </div>
+                    <button class="heart-btn ${favoriteSongs.isFavorite(song.id) ? 'active' : ''}" 
+                        onclick="favoriteSongs.toggleFavorite('${song.id}')"
+                        data-id="${song.id}"
+                        title="${favoriteSongs.isFavorite(song.id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}">
+                        <i class="${favoriteSongs.isFavorite(song.id) ? 'fas' : 'far'} fa-heart"></i>
+                    </button>
                 </div>
             `).join('');
             
             document.getElementById('full-song-list').innerHTML = songsHtml;
         } else {
             fullListContainer.style.display = 'none';
-            fullListBtn.textContent = 'Xem danh sách đầy đủ';
+            fullListBtn.innerHTML = '<i class="fas fa-th-list"></i> Xem danh sách đầy đủ';
         }
     });
 }
@@ -303,14 +323,56 @@ function scrollToTop() {
     });
 }
 
+// Tab navigation functionality
+function initTabNavigation() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const panels = document.querySelectorAll('.selection-panel');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons and panels
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            panels.forEach(panel => panel.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Show corresponding panel
+            const tabId = button.getAttribute('data-tab');
+            document.getElementById(`${tabId}-panel`).classList.add('active');
+        });
+    });
+}
+
+// Close full song list
+function initCloseFullList() {
+    const closeBtn = document.getElementById('close-full-list');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('full-song-list-container').style.display = 'none';
+            document.getElementById('show-full-list-btn').textContent = 'Xem danh sách đầy đủ';
+        });
+    }
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize favorites
+    favoriteSongs = new FavoriteSongs();
+    window.favoriteSongs = favoriteSongs; // Make it globally accessible for button clicks
+    
     // Initialize scroll-to-top functionality
     window.addEventListener('scroll', toggleScrollButton);
     document.getElementById('scroll-to-top').addEventListener('click', scrollToTop);
     
-    // Set up full song list
+    // Initialize the full song list display
     displayFullSongList();
+    
+    // Initialize tab navigation
+    initTabNavigation();
+    
+    // Initialize close button for full song list
+    initCloseFullList();
 });
 
 // Make functions globally accessible for HTML buttons

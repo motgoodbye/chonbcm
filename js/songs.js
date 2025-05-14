@@ -468,7 +468,12 @@ const songs = [
     {id: "482", title: "Lấy Hết Lòng, Hết Linh Hồn", link: "https://book.watv.org/newsong/newsong482", topic: "Ngẫm nghĩ", duration: "01:17", seconds: 77},
     {id: "483", title: "Đức Chúa Trời Êlôhim", link: "https://book.watv.org/newsong/newsong483", topic: "Ngẫm nghĩ", duration: "01:17", seconds: 77},
     {id: "484", title: "Kính Lạy, Tán Dương Lên Đấng Chí Thánh", link: "https://book.watv.org/newsong/newsong484", topic: "Ngẫm nghĩ", duration: "01:18", seconds: 78},
-    {id: "485", title: "Giêrusalem Từ Trên Trời Ngự Xuống", link: "https://book.watv.org/newsong/newsong485", topic: "Ngẫm nghĩ", duration: "01:19", seconds: 79}
+    {id: "485", title: "Giêrusalem Từ Trên Trời Ngự Xuống", link: "https://book.watv.org/newsong/newsong485", topic: "Ngẫm nghĩ", duration: "01:19", seconds: 79},
+    {id: "PL1", title: "Bây giờ Nước Thiên Đàng sắp kíp!", link: "https://book.watv.org/newsong/newsong-appx005/", topic: "Phụ lục", duration: "02:00", seconds: 120},
+    {id: "PL2", title: "Nước Thiên Đàng đầy vinh hiển rực rỡ nay đã đến thật gần!", link: "https://book.watv.org/newsong/newsong-appx001/", topic: "Phụ lục", duration: "02:01", seconds: 121},
+    {id: "PL3", title: "Ngày Vào Thành Nước Thiên Đàng đang được gần kề!", link: "https://book.watv.org/newsong/newsong-appx002/", topic: "Phụ lục", duration: "02:04", seconds: 124},
+    {id: "PL4", title: "Buổi Sáng của Nước Thiên Đàng Vĩnh Cửu được sáng rực lên!", link: "https://book.watv.org/newsong/newsong-appx003/", topic: "Phụ lục", duration: "02:01", seconds: 121},
+    {id: "PL5", title: "Hãy hoàn thành Tin Lành Nước Thiên Đàng", link: "https://book.watv.org/newsong/newsong-appx004", topic: "Phụ lục", duration: "01:57", seconds: 117},
 ];
 
 const FIXED_TOPICS = [
@@ -481,7 +486,8 @@ const FIXED_TOPICS = [
     'Hối cải',
     'Truyền đạo',
     'Nghi thức',
-    'Ngẫm nghĩ'
+    'Ngẫm nghĩ',
+    'Phụ lục'
 ];
 
 const colorClasses = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5'];
